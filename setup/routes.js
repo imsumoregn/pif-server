@@ -10,13 +10,7 @@ module.exports = function (app) {
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(
     cors({
-      origin: (origin, callback) => {
-        if (environment.allowOrigins.indexOf(origin) !== -1) {
-          callback(null, true);
-        } else {
-          callback(new Error("Not allowed by CORS"));
-        }
-      },
+      origin: "*",
     })
   );
   app.use(helmet());

@@ -1,6 +1,7 @@
 export const environment = {
   production: true,
   apiUrl: "",
+  client: "https://shecodes-mentorship.vercel.app",
   gateway: {
     mentor: {
       url: "",
@@ -19,5 +20,4 @@ export const environment = {
     host: "",
     dialect: "postgres",
   },
-  allowOrigins: [],
 };

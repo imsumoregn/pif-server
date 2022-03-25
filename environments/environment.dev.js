@@ -1,6 +1,7 @@
 export const environment = {
   production: false,
   apiUrl: "http://localhost:8080",
+  client: "http://localhost:3000",
   gateway: {
     mentor: {
       url: "http://localhost:8080/api/mentors",
@@ -19,5 +20,4 @@ export const environment = {
     host: "localhost",
     dialect: "postgres",
   },
-  allowOrigins: ["localhost:3000"],
 };
