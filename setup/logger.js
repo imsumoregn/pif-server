@@ -8,15 +8,15 @@ const logger = winston.createLogger({
   format: winston.format.json(),
   exceptionHandlers: [
     new winston.transports.Console({ colorize: true, prettyPrint: true }),
-    new winston.transports.File({ filename: environment.log.exception }),
+    new winston.transports.File({ filename: `${__dirname}/${environment.log.exception}` }),
   ],
   rejectionHandlers: [
     new winston.transports.Console({ colorize: true, prettyPrint: true }),
-    new winston.transports.File({ filename: environment.log.rejection }),
+    new winston.transports.File({ filename: `${__dirname}/${environment.log.rejection}` }),
   ],
   transports: [
     new winston.transports.File({
-      filename: environment.log.general,
+      filename: `${__dirname}/${environment.log.general}`,
       level: "info",
     }),
   ],
