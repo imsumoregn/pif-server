@@ -1,7 +1,7 @@
-const winston = require("winston");
 const { Sequelize } = require("sequelize");
 
 const environment = require("../environments/environment.local");
+const logger = require("./logger");
 
 const sequelize = new Sequelize(
   environment.database.name,
@@ -10,7 +10,7 @@ const sequelize = new Sequelize(
   {
     host: environment.database.host,
     dialect: environment.database.dialect,
-    logging: (message) => winston.debug(message),
+    logging: (message) => logger.debug(message),
   }
 );
 

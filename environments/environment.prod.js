@@ -1,4 +1,4 @@
-export const environment = {
+const environment = {
   production: true,
   apiUrl: "",
   client: "https://shecodes-mentorship.vercel.app",
@@ -11,9 +11,9 @@ export const environment = {
     },
   },
   log: {
-    general: "/logs/production/general.log",
-    exception: "/logs/production/uncaught-exception.log",
-    rejection: "/logs/production/unhandled-rejection.log",
+    general: "../logs/production/general.log",
+    exception: "../logs/production/uncaught-exception.log",
+    rejection: "../logs/production/unhandled-rejection.log",
   },
   database: {
     name: "mentorship",
@@ -21,3 +21,5 @@ export const environment = {
     dialect: "postgres",
   },
 };
+
+module.exports = environment;

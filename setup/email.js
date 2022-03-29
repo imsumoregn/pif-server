@@ -1,9 +1,9 @@
 const nodemailer = require("nodemailer");
 const handlebars = require("handlebars");
-const winston = require("winston");
 
 const { readHTMLFile } = require("../helpers/reader.helper");
 const environment = require("../environments/environment.local");
+const logger = require("./logger");
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -39,7 +39,7 @@ const confirmationAccount = (account) => {
         if (err) {
           throw err;
         }
-        winston.info(info);
+        logger.info(info);
       });
     }
   );

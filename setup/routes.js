@@ -4,7 +4,7 @@ const express = require("express");
 const helmet = require("helmet");
 
 const environment = require("../environments/environment.local");
-const error = require("../middlewares/error");
+const error = require("../middlewares/error.middleware");
 
 module.exports = function (app) {
   app.use(bodyParser.urlencoded({ extended: true }));

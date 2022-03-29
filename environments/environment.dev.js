@@ -1,4 +1,4 @@
-export const environment = {
+const environment = {
   production: false,
   apiUrl: "http://localhost:8080",
   client: "http://localhost:3000",
@@ -11,9 +11,9 @@ export const environment = {
     },
   },
   log: {
-    general: "/logs/development/general.log",
-    exception: "/logs/development/uncaught-exception.log",
-    rejection: "/logs/development/unhandled-rejection.log",
+    general: "../logs/development/general.dev.log",
+    exception: "../logs/development/uncaught-exception.dev.log",
+    rejection: "../logs/development/unhandled-rejection.dev.log",
   },
   database: {
     name: "mentorship_dev",
@@ -21,3 +21,5 @@ export const environment = {
     dialect: "postgres",
   },
 };
+
+module.exports = environment;

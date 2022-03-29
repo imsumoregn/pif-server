@@ -3,23 +3,27 @@ require("express-async-errors");
 
 const environment = require("../environments/environment.local");
 
-module.exports = function () {
-  // hanle uncaught exceptions
-  winston.exceptions.handle(
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.json(),
+  exceptionHandlers: [
     new winston.transports.Console({ colorize: true, prettyPrint: true }),
-    new winston.transports.File({ filename: environment.log.exception })
-  );
-
-  // hanle unhandled rejection
-  winston.rejections.handle(
+    new winston.transports.File({ filename: environment.log.exception }),
+  ],
+  rejectionHandlers: [
     new winston.transports.Console({ colorize: true, prettyPrint: true }),
-    new winston.transports.File({ filename: environment.log.rejection })
-  );
-
-  winston.add(
+    new winston.transports.File({ filename: environment.log.rejection }),
+  ],
+  transports: [
     new winston.transports.File({
       filename: environment.log.general,
       level: "info",
-    })
-  );
-};
+    }),
+  ],
+});
+
+if (!environment.production) {
+  logger.add(new winston.transports.Console({ colorize: true, prettyPrint: true }));
+}
+
+module.exports = logger;
