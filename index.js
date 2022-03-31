@@ -2,7 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 
-const database = require("./setup/database");
+const database = require("./models/index");
 const environment = require("./environments/environment.local");
 const logger = require("./setup/logger");
 
