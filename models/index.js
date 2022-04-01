@@ -43,7 +43,7 @@ Object.keys(db).forEach((modelName) => {
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
-db.Mentees = require("./mentee")(sequelize, Sequelize);
-db.Mentors = require("./mentor")(sequelize, Sequelize);
+db.Mentee = require("./mentee")(sequelize, Sequelize);
+db.Mentor = require("./mentor")(sequelize, Sequelize);
 
 module.exports = db;
