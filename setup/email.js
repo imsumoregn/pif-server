@@ -1,21 +1,13 @@
-const nodemailer = require("nodemailer");
+const sgMail = require("@sendgrid/mail");
 const handlebars = require("handlebars");
 
 const { readHTMLFile } = require("../helpers/reader.helper");
 const environment = require("../environments/environment.local");
 const logger = require("./logger");
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  host: process.env.MAIL_SERVER,
-  port: process.env.MAIL_PORT,
-  auth: {
-    user: process.env.MAIL_USERNAME,
-    pass: process.env.MAIL_PASSWORD,
-  },
-});
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-const confirmationAccount = (account) => {
+const mailConfirmationAccount = (account) => {
   readHTMLFile(
     `${__dirname}/templates/email-confirmation.template.html`,
     (error, html) => {
@@ -35,12 +27,47 @@ const confirmationAccount = (account) => {
         html: htmlToSend,
       };
 
-      transporter.sendMail(options, (err, info) => {
-        if (err) {
+      sgMail
+        .send(options)
+        .then((info) => {
+          logger.info(info);
+        })
+        .catch((err) => {
           throw err;
-        }
-        logger.info(info);
-      });
+        });
     }
   );
 };
+
+const mailResetPassword = (account) => {
+  readHTMLFile(
+    `${__dirname}/templates/email-reset-password.template.html`,
+    (error, html) => {
+      const template = handlebars.compile(html);
+      const token = account.generateTemporaryAuthToken();
+      const replacements = {
+        username: account.name,
+        confirmUrl: `${environment.client}/user/password-recovered?token=${token}`,
+      };
+
+      const htmlToSend = template(replacements);
+      const options = {
+        from: process.env.MAIL_USERNAME,
+        to: account.email,
+        subject: "Khôi phục mật khẩu - SheCodes Mentorship",
+        html: htmlToSend,
+      };
+
+      sgMail
+        .send(options)
+        .then((info) => {
+          logger.info(info);
+        })
+        .catch((err) => {
+          throw err;
+        });
+    }
+  );
+};
+
+module.exports = { mailConfirmationAccount, mailResetPassword };

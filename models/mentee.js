@@ -45,5 +45,16 @@ module.exports = (sequelize, DataTypes) => {
     );
   };
 
+  Mentee.prototype.generateTemporaryAuthToken = () => {
+    const realtime = Date.now();
+    return jwt.sign(
+      {
+        ..._.pick(this, ["id"]),
+        createdAt: realtime,
+      },
+      process.env.JWT_SECRET_KEY
+    );
+  };
+
   return Mentee;
 };
