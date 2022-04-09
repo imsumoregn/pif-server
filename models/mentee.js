@@ -1,5 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
+const jwt = require("jsonwebtoken");
+
 module.exports = (sequelize, DataTypes) => {
   class Mentee extends Model {
     /**
