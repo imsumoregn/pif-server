@@ -10,7 +10,7 @@ const { MENTOR_URL } = require("../modules/mentor/mentor.constant");
 const mentee = require("../modules/mentee/mentee.route");
 const mentor = require("../modules/mentor/mentor.route");
 
-module.exports = function (app) {
+module.exports = (app) => {
   app.use(timeout("15s"));
 
   app.use(bodyParser.urlencoded({ extended: true }));
