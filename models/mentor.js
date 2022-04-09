@@ -13,9 +13,17 @@ module.exports = (sequelize, DataTypes) => {
   }
   Mentor.init(
     {
+      id: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        primaryKey: true,
+      },
       email: DataTypes.STRING,
       name: DataTypes.STRING,
-      memberSince: DataTypes.DATE,
+      memberSince: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
+      },
       hobbies: DataTypes.STRING,
       offers: DataTypes.STRING,
       domainKnowlegde: DataTypes.STRING,

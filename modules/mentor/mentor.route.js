@@ -5,8 +5,8 @@ const {
   getAllMentors,
   getMentorById,
   createMentor,
-  updateMentor,
-  updateMentorAvatar,
+  updateMentorById,
+  deleteMentorById,
 } = require("./mentor.controller");
 
 router.get("/", getAllMentors);
@@ -15,8 +15,8 @@ router.get("/:id", getMentorById);
 
 router.post("/", createMentor);
 
-router.patch("/:id", updateMentor);
+router.patch("/:id", updateMentorById);
 
-router.put("/:id", updateMentorAvatar);
+router.delete("/:id", deleteMentorById);
 
 module.exports = router;

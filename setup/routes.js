@@ -2,8 +2,8 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const express = require("express");
 const helmet = require("helmet");
+const timeout = require("connect-timeout");
 
-const environment = require("../environments/environment.local");
 const error = require("../middlewares/error.middleware");
 const { MENTEE_URL } = require("../modules/mentee/mentee.constant");
 const { MENTOR_URL } = require("../modules/mentor/mentor.constant");
@@ -11,6 +11,8 @@ const mentee = require("../modules/mentee/mentee.route");
 const mentor = require("../modules/mentor/mentor.route");
 
 module.exports = function (app) {
+  app.use(timeout("15s"));
+
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(
     cors({

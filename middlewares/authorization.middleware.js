@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-function authorization(req, res, next) {
+const authorization = (req, res, next) => {
   const token = req.header("Authorization");
   if (!token) {
     return res
@@ -15,6 +15,6 @@ function authorization(req, res, next) {
   } catch (exception) {
     return res.status(400).send({ isError: true, message: "Invalid token!" });
   }
-}
+};
 
 module.exports = authorization;

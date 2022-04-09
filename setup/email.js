@@ -9,32 +9,35 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const mailConfirmationAccount = (account) => {
   readHTMLFile(
-    `${__dirname}/templates/email-confirmation.template.html`,
+    `${__dirname}/../templates/email-confirmation.template.html`,
     (error, html) => {
-      const template = handlebars.compile(html);
-      const token = account.generateAuthToken();
-      const replacements = {
-        username: account.name,
-        confirmUrl: `${environment.client}/user/verify-email?token=${token}`,
-      };
+      if (!error) {
+        console.log(account);
+        const template = handlebars.compile(html);
+        const token = account.generateAuthToken();
+        const replacements = {
+          username: account.name,
+          confirmUrl: `${environment.client}/user/verify-email?token=${token}`,
+        };
 
-      const htmlToSend = template(replacements);
-      const options = {
-        from: process.env.MAIL_USERNAME,
-        to: account.email,
-        subject:
-          "Chào mừng đến với SheCodes Mentorship. Vui lòng xác thực tài khoản của bạn.",
-        html: htmlToSend,
-      };
+        const htmlToSend = template(replacements);
+        const options = {
+          from: process.env.MAIL_USERNAME,
+          to: account.email,
+          subject:
+            "Chào mừng đến với SheCodes Mentorship. Vui lòng xác thực tài khoản của bạn.",
+          html: htmlToSend,
+        };
 
-      sgMail
-        .send(options)
-        .then((info) => {
-          logger.info(info);
-        })
-        .catch((err) => {
-          throw err;
-        });
+        sgMail
+          .send(options)
+          .then((info) => {
+            logger.info(info);
+          })
+          .catch((err) => {
+            throw err;
+          });
+      }
     }
   );
 };

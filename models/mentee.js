@@ -13,13 +13,27 @@ module.exports = (sequelize, DataTypes) => {
   }
   Mentee.init(
     {
+      id: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        primaryKey: true,
+      },
       email: DataTypes.STRING,
       password: DataTypes.STRING,
       name: DataTypes.STRING,
-      memberSince: DataTypes.DATE,
+      memberSince: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
+      },
       dob: DataTypes.DATE,
-      isConfirmedEmail: DataTypes.BOOLEAN,
-      isActive: DataTypes.BOOLEAN,
+      isConfirmedEmail: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      isActive: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
+      },
       avatarUrl: DataTypes.STRING,
       schools: DataTypes.ARRAY(DataTypes.STRING),
       exp: DataTypes.ARRAY(DataTypes.STRING),

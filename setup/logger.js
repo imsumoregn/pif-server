@@ -4,15 +4,19 @@ require("express-async-errors");
 const environment = require("../environments/environment.local");
 
 const logger = winston.createLogger({
-  level: 'info',
+  level: "info",
   format: winston.format.json(),
   exceptionHandlers: [
     new winston.transports.Console({ colorize: true, prettyPrint: true }),
-    new winston.transports.File({ filename: `${__dirname}/${environment.log.exception}` }),
+    new winston.transports.File({
+      filename: `${__dirname}/${environment.log.exception}`,
+    }),
   ],
   rejectionHandlers: [
     new winston.transports.Console({ colorize: true, prettyPrint: true }),
-    new winston.transports.File({ filename: `${__dirname}/${environment.log.rejection}` }),
+    new winston.transports.File({
+      filename: `${__dirname}/${environment.log.rejection}`,
+    }),
   ],
   transports: [
     new winston.transports.File({
@@ -23,7 +27,9 @@ const logger = winston.createLogger({
 });
 
 if (!environment.production) {
-  logger.add(new winston.transports.Console({ colorize: true, prettyPrint: true }));
+  logger.add(
+    new winston.transports.Console({ colorize: true, prettyPrint: true })
+  );
 }
 
 module.exports = logger;
