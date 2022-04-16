@@ -1,5 +1,9 @@
 const { Mentee } = require("../../models/index");
 const bcrypt = require('bcrypt');
+const {
+  validateCreateMentee,
+  validateUpdateMentee,
+} = require("../../helpers/validator.helper");
 
 const registerMentee = async (req, res) => {
   const { error } = validateCreateMentee(req.body);
@@ -9,7 +13,7 @@ const registerMentee = async (req, res) => {
       message: error.details[0].message.replace(/\"/g, "'"),
     });
   }
-  
+
   let mentee = await Mentee.findOne({ where: {email: req.body.email}});
   if (mentee) {
     return res.status(400).send({ isError: true, message: "Email already exists!"});
