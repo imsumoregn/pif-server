@@ -2,4 +2,6 @@ node_modules/
 
 environments/environment.local.js
 
-logs/development/
+logs/development/general.dev.log
+logs/development/uncaught-exception.dev.log
+logs/development/unhandled-rejection.dev.log
