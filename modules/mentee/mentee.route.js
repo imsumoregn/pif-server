@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const {
+  getAllMentees,
   registerMentee,
   getMenteeProfile,
   updateMenteeProfile,
@@ -14,7 +15,9 @@ const {
   menteeResetPassword,
 } = require("./mentee.controller");
 
-router.post("/", registerMentee);
+router.get("/all", getAllMentees);
+
+router.post("/register", registerMentee);
 
 router.get("/me", getMenteeProfile);
 

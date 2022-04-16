@@ -40,4 +40,45 @@ const validateUpdateMentor = (mentor) => {
   return schema.validate(mentor);
 };
 
-module.exports = { validateCreateMentor, validateUpdateMentor };
+
+/* 
+Added mentee validation helpers
+*/
+
+const validateCreateMentee = (mentee) => {
+  const schema = Joi.object({
+    email: Joi.string().email().required(),
+    password: Joi.string().required(),
+    name: Joi.string().required(),
+    memberSince: Joi.date().raw(),
+    dob: Joi.date().raw(),
+    isConfirmedEmail: Joi.boolean(),
+    isActive: Joi.boolean(),
+    avatarUrl: Joi.string(),
+    schools: Joi.string(),
+    exp: Joi.string(),
+  });
+
+  return schema.validate(mentee);
+};
+
+const validateUpdateMentee = (mentee) => {
+  const schema = Joi.object({
+    email: Joi.string().email(),
+    password: Joi.string(),
+    name: Joi.string(),
+    memberSince: Joi.date().raw(),
+    dob: Joi.date().raw(),
+    bookingUrl: Joi.string(),
+    bookingUrl: Joi.string(),
+    isConfirmedEmail: Joi.boolean(),
+    isActive: Joi.boolean(),
+    avatarUrl: Joi.string(),
+    schools: Joi.string(),
+    exp: Joi.string(),
+  });
+
+  return schema.validate(mentee);
+};
+
+module.exports = { validateCreateMentor, validateUpdateMentor, validateCreateMentee, validateUpdateMentee };
