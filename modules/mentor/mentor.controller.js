@@ -1,4 +1,7 @@
+const { v4: uuid } = require("uuid");
+
 const { Mentor } = require("../../models/index");
+const { bucket } = require("../../setup/firebase");
 const {
   validateCreateMentor,
   validateUpdateMentor,
@@ -116,10 +119,59 @@ const deleteMentorById = async (req, res) => {
     .json({ isError: false, message: "Delete mentor successfully." });
 };
 
+const updateMentorAvatar = async (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({
+      isError: true,
+      message: "No files have been uploaded!",
+    });
+  }
+
+  const mentor = await Mentor.findByPk(req.params.id);
+  if (!mentor) {
+    return res.status(404).json({
+      isError: true,
+      message: "Mentor not found!",
+    });
+  }
+
+  const token = uuid();
+  const imageStorageName = `${new Date().getTime()}_${req.file.originalname}`;
+
+  const blob = bucket.file(imageStorageName);
+  const blobWriter = blob.createWriteStream({
+    metadata: {
+      contentType: req.file.mimetype,
+      metadata: {
+        firebaseStorageDownloadTokens: token,
+      },
+    },
+  });
+
+  blobWriter.on("error", (err) => {
+    throw err;
+  });
+
+  blobWriter.on("finish", async () => {
+    await mentor.update({
+      avatarUrl: `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${imageStorageName}?alt=media&token=${token}`,
+    });
+
+    res.status(200).json({
+      isError: false,
+      message: "Update avatar successfully.",
+      data: mentor,
+    });
+  });
+
+  blobWriter.end(req.file.buffer);
+};
+
 module.exports = {
   getAllMentors,
   getMentorById,
   createMentor,
   updateMentorById,
   deleteMentorById,
+  updateMentorAvatar,
 };
