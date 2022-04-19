@@ -12,7 +12,6 @@ const mailConfirmationAccount = (account) => {
     `${__dirname}/../templates/email-confirmation.template.html`,
     (error, html) => {
       if (!error) {
-        console.log(account);
         const template = handlebars.compile(html);
         const token = account.generateAuthToken();
         const replacements = {
