@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const multer = require("multer");
+const upload = multer({ storage: multer.memoryStorage() });
 
 const {
   registerMentee,
@@ -13,14 +15,19 @@ const {
   menteeVerifyPasswordResetToken,
   menteeResetPassword,
 } = require("./mentee.controller");
+const authorization = require("../../middlewares/authorization.middleware");
 
 router.post("/", registerMentee);
 
-router.get("/me", getMenteeProfile);
+router.get("/me", [authorization], getMenteeProfile);
 
 router.patch("/me", updateMenteeProfile);
 
-router.put("/me/avatar", updateMenteeAvatar);
+router.put(
+  "/me/avatar",
+  [authorization, upload.single("avatar")],
+  updateMenteeAvatar
+);
 
 router.post("/auth", menteeLogin);
 
