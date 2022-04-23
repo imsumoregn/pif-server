@@ -1,3 +1,5 @@
+const _ = require("lodash");
+
 const { Mentee } = require("../../models/index");
 
 const registerMentee = async () => {};
@@ -13,7 +15,7 @@ const getMenteeProfile = async (req, res) => {
 
   return res.status(200).json({
     isError: false,
-    data: mentee,
+    data: _.omit(mentee, ["password"]),
     message: "Get profile successfully.",
   });
 };
@@ -61,7 +63,7 @@ const updateMenteeAvatar = async (req, res) => {
     res.status(200).json({
       isError: false,
       message: "Update avatar successfully.",
-      data: mentee,
+      data: _.omit(mentee, ["password"]),
     });
   });
 
