@@ -2,7 +2,21 @@ const { Mentee } = require("../../models/index");
 
 const registerMentee = async () => {};
 
-const getMenteeProfile = async () => {};
+const getMenteeProfile = async (req, res) => {
+  const mentee = await Mentee.findByPk(req.user.id);
+  if (!mentee) {
+    return res.status(404).json({
+      isError: false,
+      message: "Mentee not found!",
+    });
+  }
+
+  return res.status(200).json({
+    isError: false,
+    data: mentee,
+    message: "Get profile successfully.",
+  });
+};
 
 const updateMenteeProfile = async () => {};
 
