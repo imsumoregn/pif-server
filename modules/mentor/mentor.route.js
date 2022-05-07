@@ -10,6 +10,7 @@ const {
   updateMentorById,
   deleteMentorById,
   updateMentorAvatar,
+  filterMentor
 } = require("./mentor.controller");
 
 router.get("/", getAllMentors);
@@ -23,5 +24,7 @@ router.patch("/:id", updateMentorById);
 router.put("/:id/avatar", upload.single("avatar"), updateMentorAvatar);
 
 router.delete("/:id", deleteMentorById);
+
+router.post("/search", filterMentor);
 
 module.exports = router;

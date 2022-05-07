@@ -1,11 +1,16 @@
 const { v4: uuid } = require("uuid");
+const _ = require("lodash");
 
-const { Mentor } = require("../../models/index");
+const { Mentor, sequelize, Field, Scope } = require("../../models/index");
 const { bucket } = require("../../setup/firebase");
 const {
   validateCreateMentor,
   validateUpdateMentor,
 } = require("../../helpers/validator.helper");
+const { DEFAULT_PAGE, DEFAULT_NUMBER_OF_ITEMS } = require("../shared/constant");
+const { Op } = require("sequelize");
+const { FieldType } = require("../field/field.constant");
+const { ScopeType } = require("../scope/scope.constant");
 
 const getAllMentors = async (req, res) => {
   const mentors = await Mentor.findAll();
@@ -53,7 +58,29 @@ const createMentor = async (req, res) => {
   mentor.exp = mentor.exp.split(",").map((data) => data.trim());
 
   const newMentor = Mentor.build(req.body);
-  await newMentor.save();
+
+  try {
+    const result = await sequelize.transaction(async (t) => {
+      const fields = await Field.findAll();
+      mentor.offers.split(",").forEach(async (offer) => {
+        if (!_.find(fields, {name: offer.trim()})) {
+          await Field.build({name: offer.trim()}).save();
+        }
+      });
+
+      const scopes = await Scope.findAll();
+      mentor.domainKnowlegde.split(",").forEach(async (domain) => {
+        if (!_.find(scopes, {name: domain.trim()})) {
+          await Scope.build({name: domain.trim()}).save();
+        }
+      });
+      
+      await newMentor.save({transaction: t});
+      return true;
+    })
+  } catch (error) {
+    throw error;
+  }
 
   return res.status(200).json({
     isError: false,
@@ -167,6 +194,83 @@ const updateMentorAvatar = async (req, res) => {
   blobWriter.end(req.file.buffer);
 };
 
+const filterMentor = async (req, res) => {
+  const {page, itemsPerPage, fields, scopes} = req.body;
+  page = page || DEFAULT_PAGE;
+  itemsPerPage = itemsPerPage || DEFAULT_NUMBER_OF_ITEMS;
+  let mentors;
+
+  if (!scopes?.length && !fields?.length) {
+    mentors = await Mentor.findAll({offset: (page - 1) * itemsPerPage, limit: itemsPerPage});
+  } else {
+    if (fields.length && fields.includes(FieldType.OTHER)) {
+      const otherFields = await Field.findAll({where: {isDefined: false}});
+      fields = _.concat(fields, otherFields.map(field => field.name));
+      _.remove(fields, field => field === FieldType.OTHER);
+    }
+
+    if (scopes.length && scopes.includes(ScopeType.OTHER)) {
+      const otherScopes = await Scope.findAll({where: {isDefined: false}});
+      scopes = _.concat(scopes, otherScopes.map(scope => scope.name));
+      _.remove(scopes, scope => scope === ScopeType.OTHER);
+    }
+
+    if (fields.length && !scopes.length) {
+      mentors = await Mentor.findAll({
+        where: {
+          domainKnowlegde: {
+            [Op.like]: {
+              [Op.any]: fields,
+            },
+          }
+        },
+        offset: (page - 1) * itemsPerPage,
+        limit: itemsPerPage,
+      });
+    } else if (!fields.length && scopes.length) {
+      mentors = await Mentor.findAll({
+        where: {
+          offers: {
+            [Op.like]: {
+              [Op.any]: scopes,
+            },
+          }
+        },
+        offset: (page - 1) * itemsPerPage,
+        limit: itemsPerPage,
+      });
+    } else {
+      mentors = await Mentor.findAll({
+        where: {
+          [Op.and]: [
+            {
+              domainKnowlegde: {
+                [Op.like]: {
+                  [Op.any]: fields,
+                },
+              }
+            }, {
+              offers: {
+                [Op.like]: {
+                  [Op.any]: scopes,
+                },
+              }
+            }
+          ]
+        },
+        offset: (page - 1) * itemsPerPage,
+        limit: itemsPerPage,
+      });
+    }
+  }
+
+  return res.status(200).json({
+    isError: false,
+    data: mentors,
+    message: "Get mentors successfully.",
+  });
+}
+
 module.exports = {
   getAllMentors,
   getMentorById,
@@ -174,4 +278,5 @@ module.exports = {
   updateMentorById,
   deleteMentorById,
   updateMentorAvatar,
+  filterMentor
 };

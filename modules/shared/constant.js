@@ -1,0 +1,4 @@
+const DEFAULT_NUMBER_OF_ITEMS = 10;
+const DEFAULT_PAGE = 1;
+
+module.exports = { DEFAULT_NUMBER_OF_ITEMS, DEFAULT_PAGE };
