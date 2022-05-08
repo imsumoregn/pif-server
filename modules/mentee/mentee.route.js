@@ -4,6 +4,7 @@ const multer = require("multer");
 const upload = multer({ storage: multer.memoryStorage() });
 
 const {
+  getAllMentees,
   registerMentee,
   getMenteeProfile,
   updateMenteeProfile,
@@ -17,7 +18,9 @@ const {
 } = require("./mentee.controller");
 const authorization = require("../../middlewares/authorization.middleware");
 
-router.post("/", registerMentee);
+router.get("/all", getAllMentees);
+
+router.post("/register", registerMentee);
 
 router.get("/me", [authorization], getMenteeProfile);
 
