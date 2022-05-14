@@ -8,7 +8,6 @@ const {
   validateLoginMentee,
 } = require("../../helpers/validator.helper");
 const { mailConfirmationAccount } = require("../../setup/email");
-const environment = require("../../environments/environment.local");
 
 const registerMentee = async (req, res) => {
   const { error } = validateCreateMentee(req.body);
@@ -72,8 +71,6 @@ const getMenteeProfile = async (req, res) => {
     message: "Get profile successfully.",
   });
 };
-
-const updateMenteeProfile = async (req, res) => {};
 
 const updateMenteeAvatar = async (req, res) => {
   if (!req.file) {
@@ -158,8 +155,6 @@ const menteeLogin = async (req, res) => {
   });
 };
 
-const menteeTokenRefresh = async () => {};
-
 const menteeEmailConfirmation = async (req, res) => {
   const decoded = jwt.verify(req.params.token, process.env.JWT_SECRET_KEY);
   if (!decoded) {
@@ -185,6 +180,10 @@ const menteeEmailConfirmation = async (req, res) => {
     .status(200)
     .json({ isError: false, message: "Confirm your account successfully." });
 };
+
+const updateMenteeProfile = async () => {};
+
+const menteeTokenRefresh = async () => {};
 
 const menteeRequestPasswordReset = async () => {};
 
