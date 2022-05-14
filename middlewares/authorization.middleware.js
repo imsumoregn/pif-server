@@ -5,7 +5,7 @@ const authorization = (req, res, next) => {
   if (!token) {
     return res
       .status(401)
-      .send({ isError: true, message: "Access denied. No token provided!" });
+      .json({ isError: true, message: "Access denied. No token provided!" });
   }
 
   try {
@@ -13,7 +13,7 @@ const authorization = (req, res, next) => {
     req.user = decoded;
     next();
   } catch (exception) {
-    return res.status(400).send({ isError: true, message: "Invalid token!" });
+    return res.status(400).json({ isError: true, message: "Invalid token!" });
   }
 };
 

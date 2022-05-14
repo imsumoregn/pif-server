@@ -8,13 +8,13 @@ const logger = require("./setup/logger");
 
 require("./setup/configuration")();
 
-// if (environment.production) {
+if (environment.production) {
   database.sequelize.sync();
-// } else {
-//   database.sequelize.sync({ force: true }).then(() => {
-//     logger.info("Drop and re-sync database.");
-//   });
-// }
+} else {
+  database.sequelize.sync({ force: true }).then(() => {
+    logger.info("Drop and re-sync database.");
+  });
+}
 
 require("./setup/routes")(app);
 

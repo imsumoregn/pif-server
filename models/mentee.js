@@ -1,6 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 const jwt = require("jsonwebtoken");
+const _ = require("lodash");
 
 module.exports = (sequelize, DataTypes) => {
   class Mentee extends Model {
@@ -11,6 +12,32 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+    }
+
+    generateAuthToken() {
+      return jwt.sign(
+        {
+          ..._.pick(this, [
+            "id",
+            "email",
+            "name",
+            "isConfirmedEmail",
+            "isActive",
+          ]),
+        },
+        process.env.JWT_SECRET_KEY
+      );
+    }
+
+    generateTemporaryAuthToken() {
+      const realtime = Date.now();
+      return jwt.sign(
+        {
+          ..._.pick(this, ["id"]),
+          createdAt: realtime,
+        },
+        process.env.JWT_SECRET_KEY
+      );
     }
   }
   Mentee.init(
@@ -45,32 +72,6 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "Mentee",
     }
   );
-
-  Mentee.prototype.generateAuthToken = () => {
-    return jwt.sign(
-      {
-        ..._.pick(this, [
-          "id",
-          "email",
-          "name",
-          "isConfirmedEmail",
-          "isActive",
-        ]),
-      },
-      process.env.JWT_SECRET_KEY
-    );
-  };
-
-  Mentee.prototype.generateTemporaryAuthToken = () => {
-    const realtime = Date.now();
-    return jwt.sign(
-      {
-        ..._.pick(this, ["id"]),
-        createdAt: realtime,
-      },
-      process.env.JWT_SECRET_KEY
-    );
-  };
 
   return Mentee;
 };

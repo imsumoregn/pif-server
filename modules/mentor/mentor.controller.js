@@ -40,7 +40,7 @@ const getMentorById = async (req, res) => {
 const createMentor = async (req, res) => {
   const { error } = validateCreateMentor(req.body);
   if (error) {
-    return res.status(400).send({
+    return res.status(400).json({
       isError: true,
       message: error.details[0].message.replace(/\"/g, "'"),
     });
@@ -50,7 +50,7 @@ const createMentor = async (req, res) => {
   if (mentor) {
     return res
       .status(400)
-      .send({ isError: true, message: "Email already exists!" });
+      .json({ isError: true, message: "Email already exists!" });
   }
 
   mentor = req.body;
@@ -63,21 +63,21 @@ const createMentor = async (req, res) => {
     const result = await sequelize.transaction(async (t) => {
       const fields = await Field.findAll();
       mentor.offers?.split(",").forEach(async (offer) => {
-        if (!_.find(fields, {name: offer.trim()})) {
-          await Field.build({name: offer.trim()}).save();
+        if (!_.find(fields, { name: offer.trim() })) {
+          await Field.build({ name: offer.trim() }).save();
         }
       });
 
       const scopes = await Scope.findAll();
       mentor.domainKnowlegde?.split(",").forEach(async (domain) => {
-        if (!_.find(scopes, {name: domain.trim()})) {
-          await Scope.build({name: domain.trim()}).save();
+        if (!_.find(scopes, { name: domain.trim() })) {
+          await Scope.build({ name: domain.trim() }).save();
         }
       });
-      
-      await newMentor.save({transaction: t});
+
+      await newMentor.save({ transaction: t });
       return true;
-    })
+    });
   } catch (error) {
     throw error;
   }
@@ -92,7 +92,7 @@ const createMentor = async (req, res) => {
 const updateMentorById = async (req, res) => {
   const { error } = validateUpdateMentor(req.body);
   if (error) {
-    return res.status(400).send({
+    return res.status(400).json({
       isError: true,
       message: error.details[0].message.replace(/\"/g, "'"),
     });
@@ -111,7 +111,7 @@ const updateMentorById = async (req, res) => {
     if (result) {
       return res
         .status(400)
-        .send({ isError: true, message: "Email already exists!" });
+        .json({ isError: true, message: "Email already exists!" });
     }
   }
 
@@ -195,24 +195,33 @@ const updateMentorAvatar = async (req, res) => {
 };
 
 const filterMentor = async (req, res) => {
-  const {page, itemsPerPage, fields, scopes} = req.body;
+  const { page, itemsPerPage, fields, scopes } = req.body;
   page = page || DEFAULT_PAGE;
   itemsPerPage = itemsPerPage || DEFAULT_NUMBER_OF_ITEMS;
   let mentors;
 
   if (!scopes?.length && !fields?.length) {
-    mentors = await Mentor.findAll({offset: (page - 1) * itemsPerPage, limit: itemsPerPage});
+    mentors = await Mentor.findAll({
+      offset: (page - 1) * itemsPerPage,
+      limit: itemsPerPage,
+    });
   } else {
     if (fields.length && fields.includes(FieldType.OTHER)) {
-      const otherFields = await Field.findAll({where: {isDefined: false}});
-      fields = _.concat(fields, otherFields?.map(field => field.name));
-      _.remove(fields, field => field === FieldType.OTHER);
+      const otherFields = await Field.findAll({ where: { isDefined: false } });
+      fields = _.concat(
+        fields,
+        otherFields?.map((field) => field.name)
+      );
+      _.remove(fields, (field) => field === FieldType.OTHER);
     }
 
     if (scopes.length && scopes.includes(ScopeType.OTHER)) {
-      const otherScopes = await Scope.findAll({where: {isDefined: false}});
-      scopes = _.concat(scopes, otherScopes?.map(scope => scope.name));
-      _.remove(scopes, scope => scope === ScopeType.OTHER);
+      const otherScopes = await Scope.findAll({ where: { isDefined: false } });
+      scopes = _.concat(
+        scopes,
+        otherScopes?.map((scope) => scope.name)
+      );
+      _.remove(scopes, (scope) => scope === ScopeType.OTHER);
     }
 
     if (fields.length && !scopes.length) {
@@ -222,7 +231,7 @@ const filterMentor = async (req, res) => {
             [Op.like]: {
               [Op.any]: fields,
             },
-          }
+          },
         },
         offset: (page - 1) * itemsPerPage,
         limit: itemsPerPage,
@@ -234,7 +243,7 @@ const filterMentor = async (req, res) => {
             [Op.like]: {
               [Op.any]: scopes,
             },
-          }
+          },
         },
         offset: (page - 1) * itemsPerPage,
         limit: itemsPerPage,
@@ -248,15 +257,16 @@ const filterMentor = async (req, res) => {
                 [Op.like]: {
                   [Op.any]: fields,
                 },
-              }
-            }, {
+              },
+            },
+            {
               offers: {
                 [Op.like]: {
                   [Op.any]: scopes,
                 },
-              }
-            }
-          ]
+              },
+            },
+          ],
         },
         offset: (page - 1) * itemsPerPage,
         limit: itemsPerPage,
@@ -269,7 +279,7 @@ const filterMentor = async (req, res) => {
     data: mentors,
     message: "Get mentors successfully.",
   });
-}
+};
 
 module.exports = {
   getAllMentors,
@@ -278,5 +288,5 @@ module.exports = {
   updateMentorById,
   deleteMentorById,
   updateMentorAvatar,
-  filterMentor
+  filterMentor,
 };

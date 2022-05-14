@@ -1,3 +1,4 @@
+const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const _ = require("lodash");
 
@@ -6,11 +7,13 @@ const {
   validateCreateMentee,
   validateLoginMentee,
 } = require("../../helpers/validator.helper");
+const { mailConfirmationAccount } = require("../../setup/email");
+const environment = require("../../environments/environment.local");
 
 const registerMentee = async (req, res) => {
   const { error } = validateCreateMentee(req.body);
   if (error) {
-    return res.status(400).send({
+    return res.status(400).json({
       isError: true,
       message: error.details[0].message.replace(/\"/g, "'"),
     });
@@ -18,7 +21,7 @@ const registerMentee = async (req, res) => {
 
   let mentee = await Mentee.findOne({ where: { email: req.body.email } });
   if (mentee) {
-    return res.status(400).send({
+    return res.status(400).json({
       isError: true,
       message: "Email already exists!",
     });
@@ -31,7 +34,9 @@ const registerMentee = async (req, res) => {
   mentee.password = await bcrypt.hash(req.body.password, salt);
 
   const newMentee = Mentee.build(mentee);
-  await newMentee.save();
+  await newMentee.save().then((response, reject) => {
+    mailConfirmationAccount(response);
+  });
 
   return res.status(200).json({
     isError: false,
@@ -68,7 +73,7 @@ const getMenteeProfile = async (req, res) => {
   });
 };
 
-const updateMenteeProfile = async () => {};
+const updateMenteeProfile = async (req, res) => {};
 
 const updateMenteeAvatar = async (req, res) => {
   if (!req.file) {
@@ -121,7 +126,7 @@ const updateMenteeAvatar = async (req, res) => {
 const menteeLogin = async (req, res) => {
   const { error } = validateLoginMentee(req.body);
   if (error) {
-    return res.status(400).send({
+    return res.status(400).json({
       isError: true,
       message: error.details[0].message.replace(/\"/g, "'"),
     });
@@ -155,7 +160,31 @@ const menteeLogin = async (req, res) => {
 
 const menteeTokenRefresh = async () => {};
 
-const menteeEmailConfirmation = async () => {};
+const menteeEmailConfirmation = async (req, res) => {
+  const decoded = jwt.verify(req.params.token, process.env.JWT_SECRET_KEY);
+  if (!decoded) {
+    return res.status(400).json({ isError: true, message: "Invalid token!" });
+  }
+
+  const mentee = await Mentee.findByPk(decoded.id);
+  if (!mentee) {
+    return res
+      .status(404)
+      .json({ isError: true, message: "Your account does not exist!" });
+  }
+
+  if (mentee.isConfirmedEmail) {
+    return res.status(400).json({
+      isError: true,
+      message: "Your account has already been confirmed!",
+    });
+  }
+
+  await mentee.update({ isConfirmedEmail: true });
+  return res
+    .status(200)
+    .json({ isError: false, message: "Confirm your account successfully." });
+};
 
 const menteeRequestPasswordReset = async () => {};
 

@@ -16,7 +16,7 @@ const mailConfirmationAccount = (account) => {
         const token = account.generateAuthToken();
         const replacements = {
           username: account.name,
-          confirmUrl: `${environment.client}/user/verify-email?token=${token}`,
+          confirmUrl: `${environment.server}/api/mentees/auth/email-confirmation/${token}`,
         };
 
         const htmlToSend = template(replacements);
