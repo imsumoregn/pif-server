@@ -40,11 +40,6 @@ const validateUpdateMentor = (mentor) => {
   return schema.validate(mentor);
 };
 
-
-/* 
-Added mentee validation helpers
-*/
-
 const validateCreateMentee = (mentee) => {
   const schema = Joi.object({
     email: Joi.string().email().required(),
@@ -78,4 +73,19 @@ const validateUpdateMentee = (mentee) => {
   return schema.validate(mentee);
 };
 
-module.exports = { validateCreateMentor, validateUpdateMentor, validateCreateMentee, validateUpdateMentee };
+const validateLoginMentee = (mentee) => {
+  const schema = Joi.object({
+    email: Joi.string().email(),
+    password: Joi.string(),
+  });
+
+  return schema.validate(mentee);
+};
+
+module.exports = {
+  validateCreateMentor,
+  validateUpdateMentor,
+  validateCreateMentee,
+  validateUpdateMentee,
+  validateLoginMentee,
+};

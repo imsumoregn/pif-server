@@ -1,16 +1,14 @@
-const {
-  Mentee
-} = require("../../models/index");
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
+const _ = require("lodash");
+
+const { Mentee } = require("../../models/index");
 const {
   validateCreateMentee,
-  validateUpdateMentee,
+  validateLoginMentee,
 } = require("../../helpers/validator.helper");
 
 const registerMentee = async (req, res) => {
-  const {
-    error
-  } = validateCreateMentee(req.body);
+  const { error } = validateCreateMentee(req.body);
   if (error) {
     return res.status(400).send({
       isError: true,
@@ -18,38 +16,35 @@ const registerMentee = async (req, res) => {
     });
   }
 
-  let mentee = await Mentee.findOne({
-    where: {
-      email: req.body.email
-    }
-  });
+  let mentee = await Mentee.findOne({ where: { email: req.body.email } });
   if (mentee) {
     return res.status(400).send({
       isError: true,
-      message: "Email already exists!"
+      message: "Email already exists!",
     });
   }
 
   mentee = req.body;
-  mentee.schools = mentee.schools.split(",").map((data) => data.trim());
-  mentee.exp = mentee.exp.split(",").map((data) => data.trim());
-  const salt = await bcrypt.genSalt(10);
-  hashedPassword = await bcrypt.hash(req.body.password, salt);
-  mentee.password = hashedPassword;
+  mentee.schools = mentee.schools?.split(",").map((data) => data.trim()) || [];
+  mentee.exp = mentee.exp?.split(",").map((data) => data.trim()) || [];
+  const salt = await bcrypt.genSalt(Number(process.env.SALT_MENTEE_PW));
+  mentee.password = await bcrypt.hash(req.body.password, salt);
 
   const newMentee = Mentee.build(mentee);
   await newMentee.save();
 
   return res.status(200).json({
     isError: false,
-    data: newMentee,
-    message: "Create mentee successfully.",
+    data: _.omit(newMentee.dataValues, ["password"]),
+    message: "Register mentee successfully.",
   });
 };
 
-
 const getAllMentees = async (req, res) => {
-  const mentees = await Mentee.findAll();
+  const mentees = await Mentee.findAll({
+    attributes: { exclude: ["password"] },
+  });
+
   return res.status(200).json({
     isError: false,
     data: mentees,
@@ -124,42 +119,39 @@ const updateMenteeAvatar = async (req, res) => {
 };
 
 const menteeLogin = async (req, res) => {
-  const {
-    email,
-    password
-  } = req.body;
+  const { error } = validateLoginMentee(req.body);
+  if (error) {
+    return res.status(400).send({
+      isError: true,
+      message: error.details[0].message.replace(/\"/g, "'"),
+    });
+  }
 
-  if (!email || !password) {
+  const mentee = await Mentee.findOne({ where: { email: req.body.email } });
+  if (!mentee) {
     return res.status(400).json({
-      isError: false,
-      message: "Missing email or password"
+      isError: true,
+      message: "Incorrect email or password!",
     });
   }
 
-  const mentee = await Mentee.findOne({
-    where: {
-      email: req.body.email
-    }
+  const validPassword = await bcrypt.compare(
+    req.body.password,
+    mentee.password
+  );
+  if (!validPassword) {
+    return res.status(400).json({
+      isError: true,
+      message: "Incorrect email or password!",
+    });
+  }
+
+  const token = mentee.generateAuthToken();
+  return res.header("Authorization", token).status(200).json({
+    isError: false,
+    message: "Login successfully.",
   });
-  if (mentee) {
-    // check user password with hashed password stored in the database
-    const validPassword = await bcrypt.compare(password, mentee.password);
-    if (validPassword) {
-      res.status(200).json({
-        message: "Log in successful."
-      });
-    } else {
-      res.status(400).json({
-        error: "Invalid Password"
-      });
-    }
-  } else {
-    res.status(401).json({
-      error: "User does not exist"
-    });
-  }
 };
-
 
 const menteeTokenRefresh = async () => {};
 

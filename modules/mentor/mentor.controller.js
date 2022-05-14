@@ -62,14 +62,14 @@ const createMentor = async (req, res) => {
   try {
     const result = await sequelize.transaction(async (t) => {
       const fields = await Field.findAll();
-      mentor.offers.split(",").forEach(async (offer) => {
+      mentor.offers?.split(",").forEach(async (offer) => {
         if (!_.find(fields, {name: offer.trim()})) {
           await Field.build({name: offer.trim()}).save();
         }
       });
 
       const scopes = await Scope.findAll();
-      mentor.domainKnowlegde.split(",").forEach(async (domain) => {
+      mentor.domainKnowlegde?.split(",").forEach(async (domain) => {
         if (!_.find(scopes, {name: domain.trim()})) {
           await Scope.build({name: domain.trim()}).save();
         }
@@ -205,13 +205,13 @@ const filterMentor = async (req, res) => {
   } else {
     if (fields.length && fields.includes(FieldType.OTHER)) {
       const otherFields = await Field.findAll({where: {isDefined: false}});
-      fields = _.concat(fields, otherFields.map(field => field.name));
+      fields = _.concat(fields, otherFields?.map(field => field.name));
       _.remove(fields, field => field === FieldType.OTHER);
     }
 
     if (scopes.length && scopes.includes(ScopeType.OTHER)) {
       const otherScopes = await Scope.findAll({where: {isDefined: false}});
-      scopes = _.concat(scopes, otherScopes.map(scope => scope.name));
+      scopes = _.concat(scopes, otherScopes?.map(scope => scope.name));
       _.remove(scopes, scope => scope === ScopeType.OTHER);
     }
 
