@@ -45,9 +45,7 @@ const validateCreateMentee = (mentee) => {
     email: Joi.string().email().required(),
     password: Joi.string().required(),
     name: Joi.string().required(),
-    memberSince: Joi.date().raw(),
     dob: Joi.date().raw(),
-    avatarUrl: Joi.string(),
     schools: Joi.array().items(Joi.string()),
     exp: Joi.array().items(Joi.string()),
   });
@@ -57,15 +55,8 @@ const validateCreateMentee = (mentee) => {
 
 const validateUpdateMentee = (mentee) => {
   const schema = Joi.object({
-    email: Joi.string().email(),
-    password: Joi.string(),
     name: Joi.string(),
-    memberSince: Joi.date().raw(),
     dob: Joi.date().raw(),
-    bookingUrl: Joi.string(),
-    isConfirmedEmail: Joi.boolean(),
-    isActive: Joi.boolean(),
-    avatarUrl: Joi.string(),
     schools: Joi.array().items(Joi.string()),
     exp: Joi.array().items(Joi.string()),
   });

@@ -6,6 +6,7 @@ const { Mentee } = require("../../models/index");
 const {
   validateCreateMentee,
   validateLoginMentee,
+  validateUpdateMentee,
 } = require("../../helpers/validator.helper");
 const { mailConfirmationAccount } = require("../../setup/email");
 
@@ -181,7 +182,33 @@ const menteeEmailConfirmation = async (req, res) => {
     .json({ isError: false, message: "Confirm your email successfully." });
 };
 
-const updateMenteeProfile = async () => {};
+const updateMenteeProfile = async (req, res) => {
+  const { error } = validateUpdateMentee(req.body);
+  if (error) {
+    return res.status(400).json({
+      isError: true,
+      message: error.details[0].message.replace(/\"/g, "'"),
+    });
+  }
+
+  const mentee = await Mentee.findByPk(req.user.id);
+  if (!mentee) {
+    return res.status(404).json({
+      isError: false,
+      message: "Mentee not found!",
+    });
+  }
+
+  req.body.schools = req.body.schools?.map((data) => data.trim());
+  req.body.exp = req.body.exp?.map((data) => data.trim());
+  await mentee.update(req.body);
+
+  return res.status(200).json({
+    isError: false,
+    data: mentee,
+    message: "Update mentee successfully.",
+  });
+};
 
 const menteeTokenRefresh = async () => {};
 

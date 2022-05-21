@@ -125,9 +125,6 @@ const updateMentorById = async (req, res) => {
   );
 
   try {
-    console.log('====================================');
-    console.log(req.body.offers, req.body.domainKnowlegde);
-    console.log('====================================');
     const fields = await Field.findAll();
     req.body.offers?.forEach(async (offer) => {
       if (!_.find(fields, { name: offer.trim() })) {

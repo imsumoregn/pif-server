@@ -953,13 +953,7 @@
         "UpdateMenteeDto": {
             "required": [],
             "properties": {
-                "email": {
-                    "type": "string"
-                },
                 "name": {
-                    "type": "string"
-                },
-                "memberSince": {
                     "type": "string"
                 },
                 "dob": {
