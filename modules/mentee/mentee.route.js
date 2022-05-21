@@ -24,7 +24,7 @@ router.post("/register", registerMentee);
 
 router.get("/me", [authorization], getMenteeProfile);
 
-router.patch("/me", updateMenteeProfile);
+router.patch("/me", [authorization], updateMenteeProfile);
 
 router.put(
   "/me/avatar",

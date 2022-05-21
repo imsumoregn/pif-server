@@ -54,22 +54,24 @@ const createMentor = async (req, res) => {
   }
 
   mentor = req.body;
-  mentor.schools = mentor.schools.split(",").map((data) => data.trim());
-  mentor.exp = mentor.exp.split(",").map((data) => data.trim());
+  mentor.schools = mentor.schools.map((data) => data.trim());
+  mentor.exp = mentor.exp.map((data) => data.trim());
+  mentor.offers = mentor.offers?.map((data) => data.trim());
+  mentor.domainKnowlegde = mentor.domainKnowlegde?.map((data) => data.trim());
 
   const newMentor = Mentor.build(req.body);
 
   try {
     const result = await sequelize.transaction(async (t) => {
       const fields = await Field.findAll();
-      mentor.offers?.split(",").forEach(async (offer) => {
+      mentor.offers?.forEach(async (offer) => {
         if (!_.find(fields, { name: offer.trim() })) {
           await Field.build({ name: offer.trim() }).save();
         }
       });
 
       const scopes = await Scope.findAll();
-      mentor.domainKnowlegde?.split(",").forEach(async (domain) => {
+      mentor.domainKnowlegde?.forEach(async (domain) => {
         if (!_.find(scopes, { name: domain.trim() })) {
           await Scope.build({ name: domain.trim() }).save();
         }
@@ -115,14 +117,35 @@ const updateMentorById = async (req, res) => {
     }
   }
 
-  if (req.body.schools) {
-    req.body.schools = req.body.schools.split(",").map((data) => data.trim());
-  }
+  req.body.schools = req.body.schools?.map((data) => data.trim());
+  req.body.exp = req.body.exp?.map((data) => data.trim());
+  req.body.offers = req.body.offers?.map((data) => data.trim());
+  req.body.domainKnowlegde = req.body.domainKnowlegde?.map((data) =>
+    data.trim()
+  );
 
-  if (req.body.exp) {
-    req.body.exp = req.body.exp.split(",").map((data) => data.trim());
+  try {
+    console.log('====================================');
+    console.log(req.body.offers, req.body.domainKnowlegde);
+    console.log('====================================');
+    const fields = await Field.findAll();
+    req.body.offers?.forEach(async (offer) => {
+      if (!_.find(fields, { name: offer.trim() })) {
+        await Field.build({ name: offer.trim() }).save();
+      }
+    });
+
+    const scopes = await Scope.findAll();
+    req.body.domainKnowlegde?.forEach(async (domain) => {
+      if (!_.find(scopes, { name: domain.trim() })) {
+        await Scope.build({ name: domain.trim() }).save();
+      }
+    });
+
+    await mentor.update(req.body);
+  } catch (error) {
+    throw error;
   }
-  await mentor.update(req.body);
 
   return res.status(200).json({
     isError: false,
@@ -199,7 +222,7 @@ const filterMentor = async (req, res) => {
   const page = req.body.page || DEFAULT_PAGE;
   const itemsPerPage = req.body.itemsPerPage || DEFAULT_NUMBER_OF_ITEMS;
   let mentors;
-  
+
   if (!scopes?.length && !fields?.length) {
     mentors = await Mentor.findAll({
       offset: (page - 1) * itemsPerPage,

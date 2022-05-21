@@ -20,6 +20,14 @@ if (config.use_env_variable) {
   );
 }
 
+db.sequelize = sequelize;
+db.Sequelize = Sequelize;
+
+db.Mentee = require("./mentee")(sequelize, Sequelize);
+db.Mentor = require("./mentor")(sequelize, Sequelize);
+db.Field = require("./field")(sequelize, Sequelize);
+db.Scope = require("./scope")(sequelize, Sequelize);
+
 fs.readdirSync(__dirname)
   .filter((file) => {
     return (
@@ -39,13 +47,5 @@ Object.keys(db).forEach((modelName) => {
     db[modelName].associate(db);
   }
 });
-
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
-
-db.Mentee = require("./mentee")(sequelize, Sequelize);
-db.Mentor = require("./mentor")(sequelize, Sequelize);
-db.Field = require("./field")(sequelize, Sequelize);
-db.Scope = require("./scope")(sequelize, Sequelize);
 
 module.exports = db;

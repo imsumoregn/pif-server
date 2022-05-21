@@ -24,7 +24,7 @@
                 "parameters": [],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Get all mentors successfully",
                         "schema": {
                             "type": "object",
                             "properties": {
@@ -59,7 +59,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Create new mentor successfully",
                         "schema": {
                             "type": "object",
                             "properties": {
@@ -108,7 +108,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Get one mentor successfully",
                         "schema": {
                             "type": "object",
                             "properties": {
@@ -163,7 +163,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Update one mentor successfully",
                         "schema": {
                             "type": "object",
                             "properties": {
@@ -224,7 +224,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Delete one mentor successfully",
                         "schema": {
                             "type": "object",
                             "properties": {
@@ -275,7 +275,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Update mentor's avatar successfully",
                         "schema": {
                             "type": "object",
                             "properties": {
@@ -340,7 +340,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Get mentors by criteria successfully",
                         "schema": {
                             "type": "object",
                             "properties": {
@@ -352,6 +352,311 @@
                                 },
                                 "data": {
                                     "$ref": "#/definitions/Mentors"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/mentees/all": {
+            "get": {
+                "tags": [
+                    "Mentee"
+                ],
+                "description": "Get all mentees",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Get all mentees successfully",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "isError": {
+                                    "type": "boolean"
+                                },
+                                "message": {
+                                    "type": "string"
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/Mentees"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/mentees/register": {
+            "post": {
+                "tags": [
+                    "Mentee"
+                ],
+                "description": "Register new mentee",
+                "parameters": [
+                    {
+                        "name": "mentee",
+                        "in": "body",
+                        "description": "Mentee with new values of properties",
+                        "schema": {
+                            "$ref": "#/definitions/CreateMenteeDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Create new mentee successfully",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "isError": {
+                                    "type": "boolean"
+                                },
+                                "message": {
+                                    "type": "string"
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/Mentee"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid mentor's information",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "isError": {
+                                    "type": "boolean"
+                                },
+                                "message": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/mentees/me": {
+            "get": {
+                "tags": [
+                    "Mentee"
+                ],
+                "description": "Mentee get their own profile",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Mentee's access token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Get profile successfully",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "isError": {
+                                    "type": "boolean"
+                                },
+                                "message": {
+                                    "type": "string"
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/Mentee"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found mentee",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "isError": {
+                                    "type": "boolean"
+                                },
+                                "message": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "Mentee"
+                ],
+                "description": "Mentee update their own profile",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Mentee's access token",
+                        "type": "string"
+                    },
+                    {
+                        "name": "mentee",
+                        "in": "body",
+                        "description": "Mentee with new values of properties",
+                        "schema": {
+                            "$ref": "#/definitions/UpdateMenteeDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Update mentee successfully",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "isError": {
+                                    "type": "boolean"
+                                },
+                                "message": {
+                                    "type": "string"
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/Mentee"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid mentor's information",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "isError": {
+                                    "type": "boolean"
+                                },
+                                "message": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found mentee",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "isError": {
+                                    "type": "boolean"
+                                },
+                                "message": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "mentees/auth": {
+            "post": {
+                "tags": [
+                    "Mentee"
+                ],
+                "description": "Mentee login",
+                "parameters": [
+                    {
+                        "name": "Credential",
+                        "in": "body",
+                        "description": "Email and password of mentee",
+                        "schema": {
+                            "$ref": "#/definitions/LoginMenteeDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Login successfully",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "isError": {
+                                    "type": "boolean"
+                                },
+                                "message": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Incorrect email or password",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "isError": {
+                                    "type": "boolean"
+                                },
+                                "message": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "mentees/auth/email-confirmation/{token}": {
+            "get": {
+                "tags": [
+                    "Mentee"
+                ],
+                "description": "Mentee confirm their mail",
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "params",
+                        "description": "Mentee's temporary token",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Confirm email successfully",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "isError": {
+                                    "type": "boolean"
+                                },
+                                "message": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid action",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "isError": {
+                                    "type": "boolean"
+                                },
+                                "message": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found mentee",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "isError": {
+                                    "type": "boolean"
+                                },
+                                "message": {
+                                    "type": "string"
                                 }
                             }
                         }
@@ -381,10 +686,16 @@
                     "type": "string"
                 },
                 "offers": {
-                    "type": "string"
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "domainKnowlegde": {
-                    "type": "string"
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "bookingUrl": {
                     "type": "string"
@@ -442,10 +753,16 @@
                     "type": "string"
                 },
                 "offers": {
-                    "type": "string"
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "domainKnowlegde": {
-                    "type": "string"
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "bookingUrl": {
                     "type": "string"
@@ -459,14 +776,17 @@
                 "githubUrl": {
                     "type": "string"
                 },
-                "avatarUrl": {
-                    "type": "string"
-                },
                 "schools": {
-                    "type": "string"
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "exp": {
-                    "type": "string"
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 }
             }
         },
@@ -486,10 +806,16 @@
                     "type": "string"
                 },
                 "offers": {
-                    "type": "string"
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "domainKnowlegde": {
-                    "type": "string"
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "bookingUrl": {
                     "type": "string"
@@ -503,14 +829,17 @@
                 "githubUrl": {
                     "type": "string"
                 },
-                "avatarUrl": {
-                    "type": "string"
-                },
                 "schools": {
-                    "type": "string"
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "exp": {
-                    "type": "string"
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 }
             }
         },
@@ -534,6 +863,133 @@
                     "items": {
                         "type": "string"
                     }
+                }
+            }
+        },
+        "Mentee": {
+            "required": [],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "uniqueItems": true
+                },
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "memberSince": {
+                    "type": "string"
+                },
+                "dob": {
+                    "type": "string"
+                },
+                "isConfirmedEmail": {
+                    "type": "boolean"
+                },
+                "isActive": {
+                    "type": "boolean"
+                },
+                "avatarUrl": {
+                    "type": "string"
+                },
+                "schools": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "exp": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "Mentees": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/Mentee"
+            }
+        },
+        "CreateMenteeDto": {
+            "required": [
+                "email",
+                "password",
+                "name"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "memberSince": {
+                    "type": "string"
+                },
+                "dob": {
+                    "type": "string"
+                },
+                "schools": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "exp": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "UpdateMenteeDto": {
+            "required": [],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "memberSince": {
+                    "type": "string"
+                },
+                "dob": {
+                    "type": "string"
+                },
+                "schools": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "exp": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "LoginMenteeDto": {
+            "required": [
+                "email",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
                 }
             }
         }

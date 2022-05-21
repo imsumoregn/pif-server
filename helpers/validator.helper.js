@@ -4,12 +4,12 @@ const validateCreateMentor = (mentor) => {
   const schema = Joi.object({
     email: Joi.string().email().required(),
     name: Joi.string().required(),
-    schools: Joi.string().required(),
-    exp: Joi.string().required(),
+    schools: Joi.array().items(Joi.string()).required(),
+    exp: Joi.array().items(Joi.string()).required(),
     memberSince: Joi.date().raw(),
     hobbies: Joi.string(),
-    offers: Joi.string(),
-    domainKnowlegde: Joi.string(),
+    offers: Joi.array().items(Joi.string()),
+    domainKnowlegde: Joi.array().items(Joi.string()),
     bookingUrl: Joi.string(),
     facebookUrl: Joi.string(),
     linkedinUrl: Joi.string(),
@@ -28,8 +28,8 @@ const validateUpdateMentor = (mentor) => {
     exp: Joi.string(),
     memberSince: Joi.date().raw(),
     hobbies: Joi.string(),
-    offers: Joi.string(),
-    domainKnowlegde: Joi.string(),
+    offers: Joi.array().items(Joi.string()),
+    domainKnowlegde: Joi.array().items(Joi.string()),
     bookingUrl: Joi.string(),
     facebookUrl: Joi.string(),
     linkedinUrl: Joi.string(),
@@ -48,8 +48,8 @@ const validateCreateMentee = (mentee) => {
     memberSince: Joi.date().raw(),
     dob: Joi.date().raw(),
     avatarUrl: Joi.string(),
-    schools: Joi.string(),
-    exp: Joi.string(),
+    schools: Joi.array().items(Joi.string()),
+    exp: Joi.array().items(Joi.string()),
   });
 
   return schema.validate(mentee);
@@ -66,8 +66,8 @@ const validateUpdateMentee = (mentee) => {
     isConfirmedEmail: Joi.boolean(),
     isActive: Joi.boolean(),
     avatarUrl: Joi.string(),
-    schools: Joi.string(),
-    exp: Joi.string(),
+    schools: Joi.array().items(Joi.string()),
+    exp: Joi.array().items(Joi.string()),
   });
 
   return schema.validate(mentee);

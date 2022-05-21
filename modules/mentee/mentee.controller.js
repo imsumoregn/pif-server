@@ -27,8 +27,8 @@ const registerMentee = async (req, res) => {
   }
 
   mentee = req.body;
-  mentee.schools = mentee.schools?.split(",").map((data) => data.trim()) || [];
-  mentee.exp = mentee.exp?.split(",").map((data) => data.trim()) || [];
+  mentee.schools = mentee.schools?.map((data) => data.trim()) || [];
+  mentee.exp = mentee.exp?.map((data) => data.trim()) || [];
   const salt = await bcrypt.genSalt(Number(process.env.SALT_MENTEE_PW));
   mentee.password = await bcrypt.hash(req.body.password, salt);
 
@@ -178,7 +178,7 @@ const menteeEmailConfirmation = async (req, res) => {
   await mentee.update({ isConfirmedEmail: true });
   return res
     .status(200)
-    .json({ isError: false, message: "Confirm your account successfully." });
+    .json({ isError: false, message: "Confirm your email successfully." });
 };
 
 const updateMenteeProfile = async () => {};

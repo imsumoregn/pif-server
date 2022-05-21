@@ -13,7 +13,7 @@ const mailConfirmationAccount = (account) => {
     (error, html) => {
       if (!error) {
         const template = handlebars.compile(html);
-        const token = account.generateAuthToken();
+        const token = account.generateTemporaryAuthToken();
         const replacements = {
           username: account.name,
           confirmUrl: `${environment.server}/api/mentees/auth/email-confirmation/${token}`,
