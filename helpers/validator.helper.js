@@ -43,7 +43,7 @@ const validateUpdateMentor = (mentor) => {
 const validateCreateMentee = (mentee) => {
   const schema = Joi.object({
     email: Joi.string().email().required(),
-    password: Joi.string().required(),
+    password: Joi.string().min(6).required(),
     name: Joi.string().required(),
     dob: Joi.date().raw(),
     schools: Joi.array().items(Joi.string()),

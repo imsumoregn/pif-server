@@ -42,6 +42,6 @@ router.post("/auth/password-reset-request", menteeRequestPasswordReset);
 
 router.get("/auth/password-reset/:token", menteeVerifyPasswordResetToken);
 
-router.post("/auth/password-change", menteeResetPassword);
+router.post("/auth/password-change", [authorization], menteeResetPassword);
 
 module.exports = router;
