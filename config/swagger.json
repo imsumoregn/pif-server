@@ -663,6 +663,185 @@
                     }
                 }
             }
+        },
+        "/mentees/auth/password-reset-request": {
+            "post": {
+                "tags": [
+                    "Mentee"
+                ],
+                "description": "Mentee requests reset password",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "body",
+                        "description": "Registered mentee's email",
+                        "type": "object",
+                        "properties": {
+                            "email": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Email was sent successfully",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "isError": {
+                                    "type": "boolean"
+                                },
+                                "message": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid email",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "isError": {
+                                    "type": "boolean"
+                                },
+                                "message": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found mentee",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "isError": {
+                                    "type": "boolean"
+                                },
+                                "message": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/mentees/auth/password-reset/{token}": {
+            "get": {
+                "tags": [
+                    "Mentee"
+                ],
+                "description": "Confirm reset password request",
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "params",
+                        "description": "Provided token in email",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Invalid token",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "isError": {
+                                    "type": "boolean"
+                                },
+                                "message": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found mentee",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "isError": {
+                                    "type": "boolean"
+                                },
+                                "message": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/mentees/auth/password-change": {
+            "post": {
+                "tags": [
+                    "Mentee"
+                ],
+                "description": "Mentee resets password",
+                "parameters": [
+                    {
+                        "name": "New password",
+                        "in": "body",
+                        "description": "Registered mentee's email",
+                        "type": "object",
+                        "properties": {
+                            "password": {
+                                "type": "string"
+                            },
+                            "confirmedPassword": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Reset password successfully",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "isError": {
+                                    "type": "boolean"
+                                },
+                                "message": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid password",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "isError": {
+                                    "type": "boolean"
+                                },
+                                "message": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found mentee",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "isError": {
+                                    "type": "boolean"
+                                },
+                                "message": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {

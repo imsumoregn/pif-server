@@ -265,7 +265,7 @@ const menteeVerifyPasswordResetToken = async (req, res) => {
 const menteeResetPassword = async (req, res) => {
   const { error } = Joi.object({
     password: Joi.string().min(6).required(),
-    resetPassword: Joi.string().min(6).valid(Joi.ref("password")).required(),
+    confirmedPassword: Joi.string().min(6).valid(Joi.ref("password")).required(),
   }).validate(req.body);
 
   if (error) {
@@ -297,7 +297,7 @@ const menteeResetPassword = async (req, res) => {
   const salt = await bcrypt.genSalt(Number(process.env.SALT_MENTEE_PW));
   req.body.password = await bcrypt.hash(req.body.password, salt);
   await mentee.update({ password: req.body.password });
-  
+
   return res.status(200).json({
     isError: false,
     message: "Reset password successfully!",
