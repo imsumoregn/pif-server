@@ -1,0 +1,541 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "SheCodes Mentorship API",
+        "description": "A collection of APIs for mentor, mentee.",
+        "version": "2.0"
+    },
+    "produces": [
+        "application/json"
+    ],
+    "consumes": [
+        "application/json",
+        "multipart/form-data"
+    ],
+    "host": "localhost:8080",
+    "basePath": "/api",
+    "paths": {
+        "/mentors": {
+            "get": {
+                "tags": [
+                    "Mentor"
+                ],
+                "description": "Get all mentors",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "isError": {
+                                    "type": "boolean"
+                                },
+                                "message": {
+                                    "type": "string"
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/Mentors"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Mentor"
+                ],
+                "description": "Create new mentor",
+                "parameters": [
+                    {
+                        "name": "mentor",
+                        "in": "body",
+                        "description": "Mentor with new values of properties",
+                        "schema": {
+                            "$ref": "#/definitions/CreateMentorDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "isError": {
+                                    "type": "boolean"
+                                },
+                                "message": {
+                                    "type": "string"
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/Mentor"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid mentor's information",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "isError": {
+                                    "type": "boolean"
+                                },
+                                "message": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/mentors/{id}": {
+            "get": {
+                "tags": [
+                    "Mentor"
+                ],
+                "description": "Get mentor by id",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "params",
+                        "description": "Mentor's id",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "isError": {
+                                    "type": "boolean"
+                                },
+                                "message": {
+                                    "type": "string"
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/Mentor"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found mentor",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "isError": {
+                                    "type": "boolean"
+                                },
+                                "message": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "Mentor"
+                ],
+                "description": "Update mentor by id",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "params",
+                        "description": "Mentor's id",
+                        "type": "string"
+                    },
+                    {
+                        "name": "mentor",
+                        "in": "body",
+                        "description": "Mentor with new values of properties",
+                        "schema": {
+                            "$ref": "#/definitions/UpdateMentorDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "isError": {
+                                    "type": "boolean"
+                                },
+                                "message": {
+                                    "type": "string"
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/Mentor"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid mentor's information",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "isError": {
+                                    "type": "boolean"
+                                },
+                                "message": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found mentor",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "isError": {
+                                    "type": "boolean"
+                                },
+                                "message": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Mentor"
+                ],
+                "description": "Delete mentor by id",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "params",
+                        "description": "Mentor's id",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "isError": {
+                                    "type": "boolean"
+                                },
+                                "message": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found mentor",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "isError": {
+                                    "type": "boolean"
+                                },
+                                "message": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/mentors/{id}/avatar": {
+            "put": {
+                "tags": [
+                    "Mentor"
+                ],
+                "description": "Update mentor's avatar by id",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "params",
+                        "description": "Mentor's id",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "isError": {
+                                    "type": "boolean"
+                                },
+                                "message": {
+                                    "type": "string"
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/Mentor"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "No files have been uploaded",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "isError": {
+                                    "type": "boolean"
+                                },
+                                "message": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found mentor",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "isError": {
+                                    "type": "boolean"
+                                },
+                                "message": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/mentors/search": {
+            "post": {
+                "tags": [
+                    "Mentor"
+                ],
+                "description": "Filter mentor by fields/scopes",
+                "parameters": [
+                    {
+                        "name": "criteria",
+                        "in": "body",
+                        "description": "Criteria to filter mentor",
+                        "schema": {
+                            "$ref": "#/definitions/SearchMentorDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "isError": {
+                                    "type": "boolean"
+                                },
+                                "message": {
+                                    "type": "string"
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/Mentors"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "Mentor": {
+            "required": [],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "uniqueItems": true
+                },
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "memberSince": {
+                    "type": "string"
+                },
+                "hobbies": {
+                    "type": "string"
+                },
+                "offers": {
+                    "type": "string"
+                },
+                "domainKnowlegde": {
+                    "type": "string"
+                },
+                "bookingUrl": {
+                    "type": "string"
+                },
+                "facebookUrl": {
+                    "type": "string"
+                },
+                "linkedinUrl": {
+                    "type": "string"
+                },
+                "githubUrl": {
+                    "type": "string"
+                },
+                "avatarUrl": {
+                    "type": "string"
+                },
+                "schools": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "exp": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "Mentors": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/Mentor"
+            }
+        },
+        "CreateMentorDto": {
+            "required": [
+                "email",
+                "name",
+                "schools",
+                "exp"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "memberSince": {
+                    "type": "string"
+                },
+                "hobbies": {
+                    "type": "string"
+                },
+                "offers": {
+                    "type": "string"
+                },
+                "domainKnowlegde": {
+                    "type": "string"
+                },
+                "bookingUrl": {
+                    "type": "string"
+                },
+                "facebookUrl": {
+                    "type": "string"
+                },
+                "linkedinUrl": {
+                    "type": "string"
+                },
+                "githubUrl": {
+                    "type": "string"
+                },
+                "avatarUrl": {
+                    "type": "string"
+                },
+                "schools": {
+                    "type": "string"
+                },
+                "exp": {
+                    "type": "string"
+                }
+            }
+        },
+        "UpdateMentorDto": {
+            "required": [],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "memberSince": {
+                    "type": "string"
+                },
+                "hobbies": {
+                    "type": "string"
+                },
+                "offers": {
+                    "type": "string"
+                },
+                "domainKnowlegde": {
+                    "type": "string"
+                },
+                "bookingUrl": {
+                    "type": "string"
+                },
+                "facebookUrl": {
+                    "type": "string"
+                },
+                "linkedinUrl": {
+                    "type": "string"
+                },
+                "githubUrl": {
+                    "type": "string"
+                },
+                "avatarUrl": {
+                    "type": "string"
+                },
+                "schools": {
+                    "type": "string"
+                },
+                "exp": {
+                    "type": "string"
+                }
+            }
+        },
+        "SearchMentorDto": {
+            "required": [],
+            "properties": {
+                "page": {
+                    "type": "integer"
+                },
+                "itemsPerPage": {
+                    "type": "integer"
+                },
+                "fields": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "scopes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+}

@@ -195,11 +195,11 @@ const updateMentorAvatar = async (req, res) => {
 };
 
 const filterMentor = async (req, res) => {
-  const { page, itemsPerPage, fields, scopes } = req.body;
-  page = page || DEFAULT_PAGE;
-  itemsPerPage = itemsPerPage || DEFAULT_NUMBER_OF_ITEMS;
+  const { fields, scopes } = req.body;
+  const page = req.body.page || DEFAULT_PAGE;
+  const itemsPerPage = req.body.itemsPerPage || DEFAULT_NUMBER_OF_ITEMS;
   let mentors;
-
+  
   if (!scopes?.length && !fields?.length) {
     mentors = await Mentor.findAll({
       offset: (page - 1) * itemsPerPage,

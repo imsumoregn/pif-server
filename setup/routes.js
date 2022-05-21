@@ -3,6 +3,8 @@ const cors = require("cors");
 const express = require("express");
 const helmet = require("helmet");
 const timeout = require("connect-timeout");
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('../config/swagger.json');
 
 const error = require("../middlewares/error.middleware");
 const { MENTEE_URL } = require("../modules/mentee/mentee.constant");
@@ -31,5 +33,6 @@ module.exports = (app) => {
   app.use(FIELD_URL, field);
   app.use(SCOPE_URL, scope);
 
+  app.use('/documents', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
   app.use(error);
 };
