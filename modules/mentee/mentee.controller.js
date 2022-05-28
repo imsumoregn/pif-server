@@ -1,8 +1,10 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const _ = require("lodash");
+const Joi = require("joi");
+const { Op } = require("sequelize");
 
-const { Mentee } = require("../../models/index");
+const { Mentee, Token } = require("../../models/index");
 const {
   validateCreateMentee,
   validateLoginMentee,
@@ -12,8 +14,12 @@ const {
   mailConfirmationAccount,
   mailResetPassword,
 } = require("../../setup/email");
-const Joi = require("joi");
 const environment = require("../../environments/environment.local");
+const {
+  ACCESS_TOKEN,
+  REFRESH_TOKEN,
+  TOKEN_EXPRIRED,
+} = require("./mentee.constant");
 
 const registerMentee = async (req, res) => {
   const { error } = validateCreateMentee(req.body);
@@ -155,7 +161,31 @@ const menteeLogin = async (req, res) => {
   }
 
   const token = mentee.generateAuthToken();
-  return res.header("Authorization", token).status(200).json({
+  const refreshToken = mentee.generateAuthToken();
+  const now = new Date();
+  await Token.bulkBuild(
+    {
+      value: token,
+      type: ACCESS_TOKEN,
+      expiredDate: new Date().setMinutes(
+        now.getMinutes() + Number(process.env.ACCESS_TOKEN_ALIVE_MINUTES)
+      ),
+    },
+    {
+      value: refreshToken,
+      type: REFRESH_TOKEN,
+      expiredDate: new Date().setDate(
+        now.getDate() + Number(process.env.REFRESH_TOKEN_ALIVE_DAYS)
+      ),
+    }
+  )
+    .save()
+    .then(() => {
+      res.header("Authorization", token);
+      res.header("Refresh-Token", refreshToken);
+    });
+
+  return res.status(200).json({
     isError: false,
     message: "Login successfully.",
   });
@@ -215,7 +245,69 @@ const updateMenteeProfile = async (req, res) => {
   });
 };
 
-const menteeTokenRefresh = async () => {};
+const logout = async (req, res) => {
+  await Token.update(
+    { status: TOKEN_EXPRIRED },
+    {
+      where: {
+        value: {
+          [Op.any]: [req.header("Authorization"), req.header("Refresh-Token")],
+        },
+      },
+    }
+  );
+
+  return res.status(200).json({
+    isError: false,
+    message: "Logout successfully.",
+  });
+};
+
+const menteeTokenRefresh = async (req, res) => {
+  const token = req.header("Refresh-Token");
+  if (!token) {
+    return res
+      .status(401)
+      .json({ isError: true, message: "Access denied. No token provided!" });
+  }
+
+  const isAvailable = await Token.findOne({
+    where: { value: token, status: TOKEN_ACTIVE },
+  });
+  if (!isAvailable) {
+    return res.status(401).json({ isError: true, message: "Token exprired!" });
+  }
+
+  try {
+    const user = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    if (!user.isConfirmedEmail) {
+      return res
+        .status(403)
+        .json({ isError: true, message: "Email has not been confirmed yet!" });
+    }
+  } catch (e) {
+    return res.status(400).json({ isError: true, message: "Invalid token!" });
+  }
+
+  const newToken = mentee.generateAuthToken();
+  const now = new Date();
+  await Token.build({
+    value: newToken,
+    type: ACCESS_TOKEN,
+    expiredDate: new Date().setMinutes(
+      now.getMinutes() + Number(process.env.ACCESS_TOKEN_ALIVE_MINUTES)
+    ),
+  })
+    .save()
+    .then(() => {
+      res.header("Authorization", token);
+    });
+
+  return res.status(200).json({
+    isError: false,
+    message: "Refresh access token successfully.",
+  });
+};
 
 const menteeRequestPasswordReset = async (req, res) => {
   const { error } = Joi.object({
@@ -265,7 +357,10 @@ const menteeVerifyPasswordResetToken = async (req, res) => {
 const menteeResetPassword = async (req, res) => {
   const { error } = Joi.object({
     password: Joi.string().min(6).required(),
-    confirmedPassword: Joi.string().min(6).valid(Joi.ref("password")).required(),
+    confirmedPassword: Joi.string()
+      .min(6)
+      .valid(Joi.ref("password"))
+      .required(),
   }).validate(req.body);
 
   if (error) {
@@ -316,4 +411,5 @@ module.exports = {
   menteeRequestPasswordReset,
   menteeVerifyPasswordResetToken,
   menteeResetPassword,
+  logout,
 };

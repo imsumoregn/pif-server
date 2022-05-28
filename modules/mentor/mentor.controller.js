@@ -1,5 +1,6 @@
 const { v4: uuid } = require("uuid");
 const _ = require("lodash");
+const validator = require("validator");
 
 const { Mentor, sequelize, Field, Scope } = require("../../models/index");
 const { bucket } = require("../../setup/firebase");
@@ -11,6 +12,7 @@ const { DEFAULT_PAGE, DEFAULT_NUMBER_OF_ITEMS } = require("../shared/constant");
 const { Op } = require("sequelize");
 const { FieldType } = require("../field/field.constant");
 const { ScopeType } = require("../scope/scope.constant");
+const Joi = require("joi");
 
 const getAllMentors = async (req, res) => {
   const mentors = await Mentor.findAll();
@@ -22,6 +24,13 @@ const getAllMentors = async (req, res) => {
 };
 
 const getMentorById = async (req, res) => {
+  if (!validator.isUUID(req.params.id, 4)) {
+    return res.status(400).json({
+      isError: true,
+      message: "Id is not a valid UUID(v4)!",
+    });
+  }
+
   const mentor = await Mentor.findByPk(req.params.id);
   if (!mentor) {
     return res.status(404).json({
@@ -92,6 +101,13 @@ const createMentor = async (req, res) => {
 };
 
 const updateMentorById = async (req, res) => {
+  if (!validator.isUUID(req.params.id, 4)) {
+    return res.status(400).json({
+      isError: true,
+      message: "Id is not a valid UUID(v4)!",
+    });
+  }
+
   const { error } = validateUpdateMentor(req.body);
   if (error) {
     return res.status(400).json({
@@ -152,6 +168,13 @@ const updateMentorById = async (req, res) => {
 };
 
 const deleteMentorById = async (req, res) => {
+  if (!validator.isUUID(req.params.id, 4)) {
+    return res.status(400).json({
+      isError: true,
+      message: "Id is not a valid UUID(v4)!",
+    });
+  }
+
   const mentor = await Mentor.findByPk(req.params.id);
   if (!mentor) {
     return res.status(404).json({
@@ -167,6 +190,13 @@ const deleteMentorById = async (req, res) => {
 };
 
 const updateMentorAvatar = async (req, res) => {
+  if (!validator.isUUID(req.params.id, 4)) {
+    return res.status(400).json({
+      isError: true,
+      message: "Id is not a valid UUID(v4)!",
+    });
+  }
+
   if (!req.file) {
     return res.status(400).json({
       isError: true,

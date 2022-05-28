@@ -101,7 +101,7 @@
                 "parameters": [
                     {
                         "name": "id",
-                        "in": "params",
+                        "in": "path",
                         "description": "Mentor's id",
                         "type": "string"
                     }
@@ -148,7 +148,7 @@
                 "parameters": [
                     {
                         "name": "id",
-                        "in": "params",
+                        "in": "path",
                         "description": "Mentor's id",
                         "type": "string"
                     },
@@ -217,7 +217,7 @@
                 "parameters": [
                     {
                         "name": "id",
-                        "in": "params",
+                        "in": "path",
                         "description": "Mentor's id",
                         "type": "string"
                     }
@@ -266,7 +266,7 @@
                 "parameters": [
                     {
                         "name": "id",
-                        "in": "params",
+                        "in": "path",
                         "description": "Mentor's id",
                         "schema": {
                             "type": "string"
@@ -613,7 +613,7 @@
                 "parameters": [
                     {
                         "name": "token",
-                        "in": "params",
+                        "in": "path",
                         "description": "Mentee's temporary token",
                         "type": "string"
                     }
@@ -738,7 +738,7 @@
                 "parameters": [
                     {
                         "name": "token",
-                        "in": "params",
+                        "in": "path",
                         "description": "Provided token in email",
                         "type": "string"
                     }
