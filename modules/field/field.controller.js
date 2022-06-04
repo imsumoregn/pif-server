@@ -21,4 +21,4 @@ const addFields = async (req, res) => {
   });
 };
 
-module.exports = { getAllFields };
+module.exports = { getAllFields, addFields };

@@ -21,4 +21,4 @@ const addScopes = async (req, res) => {
   });
 };
 
-module.exports = { getAllScopes };
+module.exports = { getAllScopes, addScopes };
