@@ -27,7 +27,7 @@ const getMentorById = async (req, res) => {
   if (!validator.isUUID(req.params.id, 4)) {
     return res.status(400).json({
       isError: true,
-      message: "Id is not a valid UUID(v4)!",
+      message: "Invalid ID!",
     });
   }
 
@@ -63,35 +63,11 @@ const createMentor = async (req, res) => {
   }
 
   mentor = req.body;
-  mentor.schools = mentor.schools.map((data) => data.trim());
-  mentor.exp = mentor.exp.map((data) => data.trim());
-  mentor.offers = mentor.offers?.map((data) => data.trim());
-  mentor.domainKnowlegde = mentor.domainKnowlegde?.map((data) => data.trim());
+  mentor.schools = mentor.schools?.map((data) => data.trim());
+  mentor.exp = mentor.exp?.map((data) => data.trim());
 
   const newMentor = Mentor.build(req.body);
-
-  try {
-    const result = await sequelize.transaction(async (t) => {
-      const fields = await Field.findAll();
-      mentor.offers?.forEach(async (offer) => {
-        if (!_.find(fields, { name: offer.trim() })) {
-          await Field.build({ name: offer.trim() }).save();
-        }
-      });
-
-      const scopes = await Scope.findAll();
-      mentor.domainKnowlegde?.forEach(async (domain) => {
-        if (!_.find(scopes, { name: domain.trim() })) {
-          await Scope.build({ name: domain.trim() }).save();
-        }
-      });
-
-      await newMentor.save({ transaction: t });
-      return true;
-    });
-  } catch (error) {
-    throw error;
-  }
+  await newMentor.save();
 
   return res.status(200).json({
     isError: false,
@@ -104,7 +80,7 @@ const updateMentorById = async (req, res) => {
   if (!validator.isUUID(req.params.id, 4)) {
     return res.status(400).json({
       isError: true,
-      message: "Id is not a valid UUID(v4)!",
+      message: "Invalid ID!",
     });
   }
 
@@ -133,32 +109,13 @@ const updateMentorById = async (req, res) => {
     }
   }
 
-  req.body.schools = req.body.schools?.map((data) => data.trim());
-  req.body.exp = req.body.exp?.map((data) => data.trim());
-  req.body.offers = req.body.offers?.map((data) => data.trim());
-  req.body.domainKnowlegde = req.body.domainKnowlegde?.map((data) =>
-    data.trim()
-  );
-
-  try {
-    const fields = await Field.findAll();
-    req.body.offers?.forEach(async (offer) => {
-      if (!_.find(fields, { name: offer.trim() })) {
-        await Field.build({ name: offer.trim() }).save();
-      }
-    });
-
-    const scopes = await Scope.findAll();
-    req.body.domainKnowlegde?.forEach(async (domain) => {
-      if (!_.find(scopes, { name: domain.trim() })) {
-        await Scope.build({ name: domain.trim() }).save();
-      }
-    });
-
-    await mentor.update(req.body);
-  } catch (error) {
-    throw error;
-  }
+  const arrayFields = ["schools", "exp"];
+  arrayFields.forEach((field) => {
+    if (req.body[field]) {
+      req.body[field] = req.body[field].map((data) => data.trim());
+    }
+  });
+  await mentor.update(req.body);
 
   return res.status(200).json({
     isError: false,
@@ -171,7 +128,7 @@ const deleteMentorById = async (req, res) => {
   if (!validator.isUUID(req.params.id, 4)) {
     return res.status(400).json({
       isError: true,
-      message: "Id is not a valid UUID(v4)!",
+      message: "Invalid ID!",
     });
   }
 
@@ -193,7 +150,7 @@ const updateMentorAvatar = async (req, res) => {
   if (!validator.isUUID(req.params.id, 4)) {
     return res.status(400).json({
       isError: true,
-      message: "Id is not a valid UUID(v4)!",
+      message: "Invalid ID!",
     });
   }
 
@@ -245,7 +202,8 @@ const updateMentorAvatar = async (req, res) => {
 };
 
 const filterMentor = async (req, res) => {
-  const { fields, scopes } = req.body;
+  let fields = req.body.fields;
+  let scopes = req.body.scopes;
   const page = req.body.page || DEFAULT_PAGE;
   const itemsPerPage = req.body.itemsPerPage || DEFAULT_NUMBER_OF_ITEMS;
   let mentors;
@@ -273,6 +231,9 @@ const filterMentor = async (req, res) => {
       );
       _.remove(scopes, (scope) => scope === ScopeType.OTHER);
     }
+
+    scopes = scopes?.map((scope) => `%${scope}%`);
+    fields = fields?.map((field) => `%${field}%`);
 
     if (fields.length && !scopes.length) {
       mentors = await Mentor.findAll({
