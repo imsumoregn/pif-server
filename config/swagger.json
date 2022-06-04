@@ -842,6 +842,146 @@
                     }
                 }
             }
+        },
+        "/fields": {
+            "get": {
+                "tags": [
+                    "Field"
+                ],
+                "description": "Get all fields",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Get all fields successfully",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "isError": {
+                                    "type": "boolean"
+                                },
+                                "message": {
+                                    "type": "string"
+                                },
+                                "data": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Field"
+                ],
+                "description": "Add fields",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "description": "Mentor fields",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Add fields successfully",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "isError": {
+                                    "type": "boolean"
+                                },
+                                "message": {
+                                    "type": "string"
+                                },
+                                "data": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/scopes": {
+            "get": {
+                "tags": [
+                    "Scope"
+                ],
+                "description": "Get all scopes",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Get all scopes successfully",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "isError": {
+                                    "type": "boolean"
+                                },
+                                "message": {
+                                    "type": "string"
+                                },
+                                "data": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Scope"
+                ],
+                "description": "Add scopes",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "body",
+                        "description": "Mentor scopes",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Add scopes successfully",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "isError": {
+                                    "type": "boolean"
+                                },
+                                "message": {
+                                    "type": "string"
+                                },
+                                "data": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {

@@ -69,14 +69,14 @@ const createMentor = async (req, res) => {
   const newMentor = Mentor.build(mentor);
   try {
     const result = await sequelize.transaction(async (t) => {
-      const fields = await Field.findAll();
+      const fields = await Field.findAll({ where: { isDefined: true } });
       mentor.offers?.split(",").forEach(async (offer) => {
         if (!_.find(fields, { name: offer.trim() })) {
           await Field.build({ name: offer.trim(), isDefined: false }).save();
         }
       });
 
-      const scopes = await Scope.findAll();
+      const scopes = await Scope.findAll({ where: { isDefined: true } });
       mentor.domainKnowlegde?.split(",").forEach(async (domain) => {
         if (!_.find(scopes, { name: domain.trim() })) {
           await Scope.build({ name: domain.trim(), isDefined: false }).save();
@@ -139,14 +139,14 @@ const updateMentorById = async (req, res) => {
 
   try {
     const result = await sequelize.transaction(async (t) => {
-      const fields = await Field.findAll();
+      const fields = await Field.findAll({ where: { isDefined: true } });
       req.body.offers?.split(",").forEach(async (offer) => {
         if (!_.find(fields, { name: offer.trim() })) {
           await Field.build({ name: offer.trim(), isDefined: false }).save();
         }
       });
 
-      const scopes = await Scope.findAll();
+      const scopes = await Scope.findAll({ where: { isDefined: true } });
       req.body.domainKnowlegde?.split(",").forEach(async (domain) => {
         if (!_.find(scopes, { name: domain.trim() })) {
           await Scope.build({ name: domain.trim(), isDefined: false }).save();

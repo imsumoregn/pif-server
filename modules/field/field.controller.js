@@ -1,7 +1,7 @@
 const { Field } = require("../../models/index");
 
 const getAllFields = async (req, res) => {
-  const fields = await Field.findAll();
+  const fields = await Field.findAll({ where: { isDefined: true } });
   return res.status(200).json({
     isError: false,
     data: fields,
