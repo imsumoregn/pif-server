@@ -865,16 +865,10 @@
                     "type": "string"
                 },
                 "offers": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
+                    "type": "string"
                 },
                 "domainKnowlegde": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
+                    "type": "string"
                 },
                 "bookingUrl": {
                     "type": "string"
@@ -932,16 +926,10 @@
                     "type": "string"
                 },
                 "offers": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
+                    "type": "string"
                 },
                 "domainKnowlegde": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
+                    "type": "string"
                 },
                 "bookingUrl": {
                     "type": "string"
@@ -985,16 +973,10 @@
                     "type": "string"
                 },
                 "offers": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
+                    "type": "string"
                 },
                 "domainKnowlegde": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
+                    "type": "string"
                 },
                 "bookingUrl": {
                     "type": "string"

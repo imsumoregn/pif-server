@@ -66,8 +66,29 @@ const createMentor = async (req, res) => {
   mentor.schools = mentor.schools?.map((data) => data.trim());
   mentor.exp = mentor.exp?.map((data) => data.trim());
 
-  const newMentor = Mentor.build(req.body);
-  await newMentor.save();
+  const newMentor = Mentor.build(mentor);
+  try {
+    const result = await sequelize.transaction(async (t) => {
+      const fields = await Field.findAll();
+      mentor.offers?.split(",").forEach(async (offer) => {
+        if (!_.find(fields, { name: offer.trim() })) {
+          await Field.build({ name: offer.trim(), isDefined: false }).save();
+        }
+      });
+
+      const scopes = await Scope.findAll();
+      mentor.domainKnowlegde?.split(",").forEach(async (domain) => {
+        if (!_.find(scopes, { name: domain.trim() })) {
+          await Scope.build({ name: domain.trim(), isDefined: false }).save();
+        }
+      });
+
+      await newMentor.save({ transaction: t });
+      return true;
+    });
+  } catch (error) {
+    throw error;
+  }
 
   return res.status(200).json({
     isError: false,
@@ -115,7 +136,29 @@ const updateMentorById = async (req, res) => {
       req.body[field] = req.body[field].map((data) => data.trim());
     }
   });
-  await mentor.update(req.body);
+
+  try {
+    const result = await sequelize.transaction(async (t) => {
+      const fields = await Field.findAll();
+      req.body.offers?.split(",").forEach(async (offer) => {
+        if (!_.find(fields, { name: offer.trim() })) {
+          await Field.build({ name: offer.trim(), isDefined: false }).save();
+        }
+      });
+
+      const scopes = await Scope.findAll();
+      req.body.domainKnowlegde?.split(",").forEach(async (domain) => {
+        if (!_.find(scopes, { name: domain.trim() })) {
+          await Scope.build({ name: domain.trim(), isDefined: false }).save();
+        }
+      });
+
+      await mentor.set(req.body).save({ transaction: t });
+      return true;
+    });
+  } catch (error) {
+    throw error;
+  }
 
   return res.status(200).json({
     isError: false,
