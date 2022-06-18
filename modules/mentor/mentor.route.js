@@ -10,10 +10,13 @@ const {
   updateMentorById,
   deleteMentorById,
   updateMentorAvatar,
-  filterMentor
+  filterMentor,
+  getAllReviewsByMentorId,
 } = require("./mentor.controller");
 
 router.get("/", getAllMentors);
+
+router.get("/:id/reviews", getAllReviewsByMentorId);
 
 router.get("/:id", getMentorById);
 

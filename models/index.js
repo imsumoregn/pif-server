@@ -28,6 +28,7 @@ db.Mentor = require("./mentor")(sequelize, Sequelize);
 db.Field = require("./field")(sequelize, Sequelize);
 db.Scope = require("./scope")(sequelize, Sequelize);
 db.Token = require("./token")(sequelize, Sequelize);
+db.Review = require("./review")(sequelize, Sequelize);
 
 fs.readdirSync(__dirname)
   .filter((file) => {

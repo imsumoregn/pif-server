@@ -335,6 +335,27 @@ const filterMentor = async (req, res) => {
   });
 };
 
+const getAllReviewsByMentorId = async (req, res) => {
+  const mentor = await Mentor.findByPk(req.params.mentorId);
+  if (!mentor) {
+    return res.status(404).json({
+      isError: true,
+      message: "Mentor not found!",
+    });
+  }
+
+  const { rows, count } = await Review.findAndCountAll({
+    where: { mentorId: req.params.mentorId },
+  });
+
+  return res.status(200).json({
+    isError: false,
+    data: rows,
+    total: count,
+    message: `Get all reviews of mentor ${mentor.name} successfully.`,
+  });
+};
+
 module.exports = {
   getAllMentors,
   getMentorById,
@@ -343,4 +364,5 @@ module.exports = {
   deleteMentorById,
   updateMentorAvatar,
   filterMentor,
+  getAllReviewsByMentorId,
 };

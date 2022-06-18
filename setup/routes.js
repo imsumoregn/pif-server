@@ -14,7 +14,9 @@ const mentee = require("../modules/mentee/mentee.route");
 const mentor = require("../modules/mentor/mentor.route");
 const field = require("../modules/field/field.route");
 const scope = require("../modules/scope/scope.route");
+const review = require("../modules/review/review.route");
 const swaggerDocument = require("../config/swagger.json");
+const { REVIEW_URL } = require("../modules/review/review.constant");
 
 module.exports = (app) => {
   app.use(timeout("15s"));
@@ -32,6 +34,7 @@ module.exports = (app) => {
   app.use(MENTOR_URL, mentor);
   app.use(FIELD_URL, field);
   app.use(SCOPE_URL, scope);
+  app.use(REVIEW_URL, review);
 
   app.use("/documents", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
   app.use(error);
