@@ -27,10 +27,20 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         defaultValue: TOKEN_ACTIVE,
       },
+      createdAt: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
+        onUpdate: "SET DEFAULT",
+      },
     },
     {
       sequelize,
       modelName: "Token",
+      timestamps: true,
     }
   );
   return Token;

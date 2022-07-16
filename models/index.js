@@ -26,6 +26,9 @@ db.User = require("./user")(sequelize, Sequelize);
 db.Mentee = require("./mentee")(sequelize, Sequelize);
 db.Mentor = require("./mentor")(sequelize, Sequelize);
 db.Token = require("./token")(sequelize, Sequelize);
+db.Review = require("./review")(sequelize, Sequelize);
+db.Field = require("./field")(sequelize, Sequelize);
+db.Offer = require("./offer")(sequelize, Sequelize);
 
 fs.readdirSync(__dirname)
   .filter((file) => {

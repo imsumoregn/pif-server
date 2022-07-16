@@ -1,20 +1,25 @@
 "use strict";
 const { Op } = require("sequelize");
 const { v4: uuid } = require("uuid");
+const bcrypt = require("bcrypt");
+
 const { EMPTY } = require("../modules/shared/shared.constant");
 const { MENTEE, MENTOR } = require("../modules/user/user.constant");
+const { Mentor, Mentee } = require("../models");
 
 const [menteeId, mentorId] = [uuid(), uuid()];
 
 module.exports = {
   async up(queryInterface, Sequelize) {
     const now = new Date();
+    const salt = await bcrypt.genSalt(Number(process.env.SALT_USER_PW));
+    const password = await bcrypt.hash("12345678", salt);
 
     const created = await queryInterface.bulkInsert("Users", [
       {
         id: menteeId,
         email: "giangpham.shecodes@gmail.com",
-        password: "12345678",
+        password: password,
         method: EMPTY,
         name: "Giang Pham",
         phone: "0123456789",
@@ -38,7 +43,7 @@ module.exports = {
       {
         id: mentorId,
         email: "mentorship.shecodes@gmail.com",
-        password: "12345678",
+        password: password,
         method: EMPTY,
         name: "SheCodes",
         phone: "0123456789",
@@ -79,9 +84,9 @@ module.exports = {
             linkedin: "https://www.linkedin.com/company/shecodesvietnam/",
             bookingUrl: EMPTY,
             github: "https://github.com/shecodesvietnam",
-            scopes: ["Web Development"],
+            scopes: ["Software Development"],
             fields: ["IT"],
-            offers: ["Review CV"],
+            offers: ["Định hướng nghề nghiệp"],
             createdAt: now,
             updatedAt: now,
           },
@@ -92,14 +97,15 @@ module.exports = {
 
   async down(queryInterface, Sequelize) {
     await Promise.all([
-      queryInterface.bulkDelete("Mentors", {
-        id: { [Op.in]: [mentorId] },
-      }),
-      queryInterface.bulkDelete("Mentees", {
-        id: { [Op.in]: [menteeId] },
-      }),
+      Mentor.destroy({ truncate: true }),
+      Mentee.destroy({ truncate: true }),
       queryInterface.bulkDelete("Users", {
-        id: { [Op.in]: [menteeId, mentorId] },
+        email: {
+          [Op.in]: [
+            "giangpham.shecodes@gmail.com",
+            "mentorship.shecodes@gmail.com",
+          ],
+        },
       }),
     ]);
   },

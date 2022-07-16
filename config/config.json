@@ -2,7 +2,7 @@
   "development": {
     "username": "mentorship_admin",
     "password": "mentorship_shecodes",
-    "database": "mentorship_dev",
+    "database": "mentorship_development",
     "host": "localhost",
     "dialect": "postgres"
   },

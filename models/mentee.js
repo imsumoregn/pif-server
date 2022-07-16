@@ -22,10 +22,20 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         type: DataTypes.UUID,
       },
+      createdAt: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
+        onUpdate: "SET DEFAULT",
+      },
     },
     {
       sequelize,
       modelName: "Mentee",
+      timestamps: true,
     }
   );
   return Mentee;

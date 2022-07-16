@@ -21,10 +21,20 @@ module.exports = (sequelize, DataTypes) => {
       menteeId: DataTypes.STRING,
       mentorId: DataTypes.STRING,
       content: DataTypes.STRING,
+      createdAt: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
+        onUpdate: "SET DEFAULT",
+      },
     },
     {
       sequelize,
       modelName: "Review",
+      timestamps: true,
     }
   );
   return Review;

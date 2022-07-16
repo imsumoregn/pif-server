@@ -10,6 +10,31 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
     }
+
+    generateAuthToken() {
+      return jwt.sign(
+        {
+          ..._.pick(this, [
+            "id",
+            "email",
+            "name",
+            "isConfirmedEmail",
+            "isActive",
+          ]),
+        },
+        process.env.JWT_SECRET_KEY
+      );
+    }
+
+    generateTemporaryAuthToken() {
+      return jwt.sign(
+        {
+          ..._.pick(this, ["id"]),
+          createdAt: Date.now(),
+        },
+        process.env.JWT_SECRET_KEY
+      );
+    }
   }
   User.init(
     {
@@ -36,12 +61,10 @@ module.exports = (sequelize, DataTypes) => {
       isConfirmed: DataTypes.STRING,
       avatar: DataTypes.STRING,
       createdAt: {
-        allowNull: false,
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,
       },
       updatedAt: {
-        allowNull: false,
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,
         onUpdate: "SET DEFAULT",

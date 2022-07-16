@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class Mentor extends Model {
+  class Field extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,24 +11,16 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  Mentor.init(
+  Field.init(
     {
       id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
       },
-      location: DataTypes.STRING,
-      linkedin: DataTypes.STRING,
-      github: DataTypes.STRING,
-      bookingUrl: DataTypes.STRING,
-      scopes: DataTypes.ARRAY(DataTypes.STRING),
-      fields: DataTypes.ARRAY(DataTypes.STRING),
-      offers: DataTypes.ARRAY(DataTypes.STRING),
-      userId: {
-        allowNull: false,
-        type: DataTypes.UUID,
-      },
+      key: { type: DataTypes.STRING, unique: true },
+      name: DataTypes.STRING,
+      isDefined: DataTypes.BOOLEAN,
       createdAt: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,
@@ -41,9 +33,9 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "Mentor",
+      modelName: "Field",
       timestamps: true,
     }
   );
-  return Mentor;
+  return Field;
 };
