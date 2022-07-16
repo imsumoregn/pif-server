@@ -1,82 +1,88 @@
 const Joi = require("joi");
 
-const validateCreateMentor = (mentor) => {
-  const schema = Joi.object({
-    email: Joi.string().email().required(),
-    name: Joi.string().required(),
-    schools: Joi.array().items(Joi.string()).required(),
-    exp: Joi.array().items(Joi.string()).required(),
-    memberSince: Joi.date().raw(),
-    hobbies: Joi.string(),
-    offers: Joi.string().required(),
-    domainKnowlegde: Joi.string().required(),
-    bookingUrl: Joi.string(),
-    facebookUrl: Joi.string(),
-    linkedinUrl: Joi.string(),
-    githubUrl: Joi.string(),
-    avatarUrl: Joi.string(),
-  });
-
-  return schema.validate(mentor);
-};
-
-const validateUpdateMentor = (mentor) => {
-  const schema = Joi.object({
-    email: Joi.string().email(),
-    name: Joi.string(),
-    schools: Joi.array().items(Joi.string()),
-    exp: Joi.array().items(Joi.string()),
-    memberSince: Joi.date().raw(),
-    hobbies: Joi.string(),
-    offers: Joi.string(),
-    domainKnowlegde: Joi.string(),
-    bookingUrl: Joi.string(),
-    facebookUrl: Joi.string(),
-    linkedinUrl: Joi.string(),
-    githubUrl: Joi.string(),
-    avatarUrl: Joi.string(),
-  });
-
-  return schema.validate(mentor);
-};
-
-const validateCreateMentee = (mentee) => {
+const validateCreateUser = (user) => {
   const schema = Joi.object({
     email: Joi.string().email().required(),
     password: Joi.string().min(6).required(),
     name: Joi.string().required(),
-    dob: Joi.date().raw(),
-    schools: Joi.array().items(Joi.string()),
-    exp: Joi.array().items(Joi.string()),
+    role: Joi.string().required(),
+    method: Joi.string(),
+    description: Joi.string(),
+    phone: Joi.string(),
+    birthday: Joi.date().raw(),
+    exp: Joi.array().items(Joi.object()),
   });
 
-  return schema.validate(mentee);
+  return schema.validate(user);
 };
 
-const validateUpdateMentee = (mentee) => {
+const validateCreateMentor = (user) => {
   const schema = Joi.object({
-    name: Joi.string(),
-    dob: Joi.date().raw(),
-    schools: Joi.array().items(Joi.string()),
-    exp: Joi.array().items(Joi.string()),
+    email: Joi.string().email().required(),
+    password: Joi.string().min(6).required(),
+    name: Joi.string().required(),
+    role: Joi.string().required(),
+    method: Joi.string(),
+    description: Joi.string(),
+    phone: Joi.string(),
+    birthday: Joi.date().raw(),
+    exp: Joi.array().items(Joi.object()),
+    location: Joi.string(),
+    scopes: Joi.array().items(Joi.string()),
+    fields: Joi.array().items(Joi.string()),
+    offers: Joi.array().items(Joi.string()),
+    linkedin: Joi.string().required(),
+    github: Joi.string(),
+    bookingUrl: Joi.string(),
   });
 
-  return schema.validate(mentee);
+  return schema.validate(user);
 };
 
-const validateLoginMentee = (mentee) => {
+const validateLogin = (user) => {
   const schema = Joi.object({
     email: Joi.string().email(),
     password: Joi.string(),
   });
 
-  return schema.validate(mentee);
+  return schema.validate(user);
+};
+
+const validateUpdateMentor = (user) => {
+  const schema = Joi.object({
+    name: Joi.string(),
+    description: Joi.string(),
+    phone: Joi.string(),
+    birthday: Joi.date().raw(),
+    exp: Joi.array().items(Joi.object()),
+    location: Joi.string(),
+    scopes: Joi.array().items(Joi.string()),
+    fields: Joi.array().items(Joi.string()),
+    offers: Joi.array().items(Joi.string()),
+    linkedin: Joi.string(),
+    github: Joi.string(),
+    bookingUrl: Joi.string(),
+  });
+
+  return schema.validate(user);
+};
+
+const validateUpdateUser = (user) => {
+  const schema = Joi.object({
+    name: Joi.string().required(),
+    description: Joi.string(),
+    phone: Joi.string(),
+    birthday: Joi.date().raw(),
+    exp: Joi.array().items(Joi.object()),
+  });
+
+  return schema.validate(user);
 };
 
 module.exports = {
+  validateCreateUser,
+  validateLogin,
   validateCreateMentor,
   validateUpdateMentor,
-  validateCreateMentee,
-  validateUpdateMentee,
-  validateLoginMentee,
+  validateUpdateUser,
 };

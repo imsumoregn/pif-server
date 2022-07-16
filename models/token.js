@@ -1,8 +1,9 @@
 "use strict";
 const { Model } = require("sequelize");
-const { TOKEN_ACTIVE } = require("../modules/mentee/mentee.constant");
+const { TOKEN_ACTIVE } = require("../modules/user/user.constant");
+
 module.exports = (sequelize, DataTypes) => {
-  class token extends Model {
+  class Token extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -12,8 +13,13 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  token.init(
+  Token.init(
     {
+      id: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        primaryKey: true,
+      },
       value: DataTypes.STRING,
       type: DataTypes.STRING,
       expiredDate: DataTypes.DATE,
@@ -24,8 +30,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "token",
+      modelName: "Token",
     }
   );
-  return token;
+  return Token;
 };

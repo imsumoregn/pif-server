@@ -1,0 +1,5 @@
+const EMPTY = "";
+const DEFAULT_PAGE = 1;
+const DEFAULT_NUMBER_OF_ITEMS = 10;
+
+module.exports = { EMPTY, DEFAULT_PAGE, DEFAULT_NUMBER_OF_ITEMS };

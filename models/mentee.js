@@ -1,8 +1,5 @@
 "use strict";
 const { Model } = require("sequelize");
-const jwt = require("jsonwebtoken");
-const _ = require("lodash");
-
 module.exports = (sequelize, DataTypes) => {
   class Mentee extends Model {
     /**
@@ -13,32 +10,6 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
     }
-
-    generateAuthToken() {
-      return jwt.sign(
-        {
-          ..._.pick(this, [
-            "id",
-            "email",
-            "name",
-            "isConfirmedEmail",
-            "isActive",
-          ]),
-        },
-        process.env.JWT_SECRET_KEY
-      );
-    }
-
-    generateTemporaryAuthToken() {
-      const realtime = Date.now();
-      return jwt.sign(
-        {
-          ..._.pick(this, ["id"]),
-          createdAt: realtime,
-        },
-        process.env.JWT_SECRET_KEY
-      );
-    }
   }
   Mentee.init(
     {
@@ -47,31 +18,15 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
       },
-      email: DataTypes.STRING,
-      password: DataTypes.STRING,
-      name: DataTypes.STRING,
-      memberSince: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW,
+      userId: {
+        allowNull: false,
+        type: DataTypes.UUID,
       },
-      dob: DataTypes.DATE,
-      isConfirmedEmail: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-      },
-      isActive: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: true,
-      },
-      avatarUrl: DataTypes.STRING,
-      schools: DataTypes.ARRAY(DataTypes.STRING),
-      exp: DataTypes.ARRAY(DataTypes.STRING),
     },
     {
       sequelize,
       modelName: "Mentee",
     }
   );
-
   return Mentee;
 };

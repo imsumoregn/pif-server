@@ -10,6 +10,31 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
     }
+
+    generateAuthToken() {
+      return jwt.sign(
+        {
+          ..._.pick(this, [
+            "id",
+            "email",
+            "name",
+            "isConfirmedEmail",
+            "isActive",
+          ]),
+        },
+        process.env.JWT_SECRET_KEY
+      );
+    }
+
+    generateTemporaryAuthToken() {
+      return jwt.sign(
+        {
+          ..._.pick(this, ["id"]),
+          createdAt: Date.now(),
+        },
+        process.env.JWT_SECRET_KEY
+      );
+    }
   }
   Mentor.init(
     {
@@ -18,26 +43,33 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
       },
-      email: DataTypes.STRING,
-      name: DataTypes.STRING,
-      memberSince: {
+      location: DataTypes.STRING,
+      linkedin: DataTypes.STRING,
+      github: DataTypes.STRING,
+      bookingUrl: DataTypes.STRING,
+      scopes: DataTypes.ARRAY(DataTypes.STRING),
+      fields: DataTypes.ARRAY(DataTypes.STRING),
+      offers: DataTypes.ARRAY(DataTypes.STRING),
+      userId: {
+        allowNull: false,
+        type: DataTypes.UUID,
+      },
+      createdAt: {
+        allowNull: false,
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,
       },
-      hobbies: DataTypes.STRING,
-      offers: DataTypes.STRING,
-      domainKnowlegde: DataTypes.STRING,
-      bookingUrl: DataTypes.STRING,
-      facebookUrl: DataTypes.STRING,
-      linkedinUrl: DataTypes.STRING,
-      githubUrl: DataTypes.STRING,
-      avatarUrl: DataTypes.STRING,
-      schools: DataTypes.ARRAY(DataTypes.STRING),
-      exp: DataTypes.ARRAY(DataTypes.STRING),
+      updatedAt: {
+        allowNull: false,
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
+        onUpdate: "SET DEFAULT",
+      },
     },
     {
       sequelize,
       modelName: "Mentor",
+      timestamps: true,
     }
   );
   return Mentor;
