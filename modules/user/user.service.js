@@ -463,8 +463,13 @@ const getUserById = async (req, res) => {
   });
 };
 
-const loginWithGoogle = async (accessToken, refreshToken, profile, done) => {
-  console.log(accessToken, refreshToken, profile, done);
+const loginWithGoogle = async (
+  accessToken,
+  refreshToken,
+  temp,
+  profile,
+  done
+) => {
   try {
     const user = await User.findOne({
       where: { email: profile.emails[0].value },
