@@ -5,7 +5,7 @@ const Joi = require("joi");
 const validator = require("validator");
 const { v4: uuid } = require("uuid");
 
-const { User, Mentor } = require("../../models/index");
+const { User, Mentor, Mentee } = require("../../models/index");
 const {
   validateCreateUser,
   validateLogin,
@@ -63,10 +63,15 @@ const registerUser = async (req, res) => {
       : User.build(req.body);
   newUser.save().then(async (response, reject) => {
     mailConfirmationAccount(response);
-    await Mentor.create({
-      ..._.pick(req.body, mentorFields),
-      userId: response.id,
-    });
+
+    if (req.body.role === MENTOR) {
+      await Mentor.create({
+        ..._.pick(req.body, mentorFields),
+        userId: response.id,
+      });
+    } else {
+      await Mentee.create({ userId: response.id });
+    }
   });
 
   return res.status(200).json({
@@ -382,7 +387,7 @@ const updateUserProfile = async (req, res) => {
   }
 
   const { error } =
-    user.role === MENTOR
+    user.role === MENTOR || req.body.role === MENTOR
       ? validateUpdateMentor(req.body)
       : validateUpdateUser(req.body);
   if (error) {
@@ -394,7 +399,7 @@ const updateUserProfile = async (req, res) => {
 
   await user.update(_.omit(req.body, mentorFields));
 
-  if (user.role === MENTOR) {
+  if (user.role === MENTOR || req.body.role === MENTOR) {
     const mentor = await Mentor.findOne({ where: { userId: req.user.id } });
     await mentor.update(_.pick(req.body, mentorFields));
     Object.assign(user, mentor);
@@ -459,6 +464,7 @@ const getUserById = async (req, res) => {
 };
 
 const loginWithGoogle = async (accessToken, refreshToken, profile, done) => {
+  console.log(accessToken, refreshToken, profile, done);
   try {
     const user = await User.findOne({
       where: { email: profile.emails[0].value },

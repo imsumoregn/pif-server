@@ -3,7 +3,7 @@ const { Token } = require("../models");
 const {
   TOKEN_ACTIVE,
   TOKEN_EXPRIRED,
-} = require("../modules/mentee/mentee.constant");
+} = require("../modules/user/user.constant");
 
 const authorization = async (req, res, next) => {
   const token = req.header("Authorization");
