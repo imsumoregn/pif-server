@@ -42,6 +42,6 @@ router.post("/auth/password-change", [authorization], userResetPassword);
 
 router.patch("/me", [authorization], updateUserProfile);
 
-router.get("/users/:id", getUserById);
+router.get("/:id", getUserById);
 
 module.exports = router;
