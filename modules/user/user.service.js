@@ -93,14 +93,31 @@ const getUserProfile = async (req, res) => {
     });
   }
 
-  if (user.role === MENTOR) {
-    const mentor = await Mentor.findOne({ where: { userId: req.user.id } });
-    Object.assign(user, mentor);
+  let profile;
+  if (user.dataValues.role === MENTOR) {
+    profile = await Mentor.findOne({ where: { userId: req.user.id } });
+  } else {
+    profile = await Mentee.findOne({ where: { userId: req.user.id } });
+  }
+
+  if (profile) {
+    Object.assign(
+      user.dataValues,
+      _.omit(profile.dataValues, ["id", "userId"]),
+      {
+        externalReference: profile.dataValues.id,
+      }
+    );
+  } else {
+    return res.status(404).json({
+      isError: true,
+      message: "User not found!",
+    });
   }
 
   return res.status(200).json({
     isError: false,
-    data: _.omit(user, ["password"]),
+    data: _.omit(user.dataValues, ["password"]),
     message: "Get profile successfully.",
   });
 };
@@ -226,7 +243,7 @@ const authTokenRefresh = async (req, res) => {
   let user;
   try {
     user = jwt.verify(token, process.env.JWT_SECRET_KEY);
-    if (!user.isConfirmedEmail) {
+    if (!user.isConfirmed) {
       return res
         .status(403)
         .json({ isError: true, message: "Email has not been confirmed yet!" });
@@ -277,14 +294,14 @@ const userEmailConfirmation = async (req, res) => {
       .json({ isError: true, message: "Your account does not exist!" });
   }
 
-  if (user.isConfirmedEmail) {
+  if (user.isConfirmed) {
     return res.status(400).json({
       isError: true,
       message: "Your account has already been confirmed!",
     });
   }
 
-  await user.update({ isConfirmedEmail: true });
+  await user.update({ isConfirmed: true });
   return res
     .status(200)
     .json({ isError: false, message: "Confirm your email successfully." });
@@ -387,7 +404,7 @@ const updateUserProfile = async (req, res) => {
   }
 
   const { error } =
-    user.role === MENTOR || req.body.role === MENTOR
+    user.dataValues.role === MENTOR || req.body.role === MENTOR
       ? validateUpdateMentor(req.body)
       : validateUpdateUser(req.body);
   if (error) {
@@ -399,10 +416,28 @@ const updateUserProfile = async (req, res) => {
 
   await user.update(_.omit(req.body, mentorFields));
 
-  if (user.role === MENTOR || req.body.role === MENTOR) {
-    const mentor = await Mentor.findOne({ where: { userId: req.user.id } });
-    await mentor.update(_.pick(req.body, mentorFields));
-    Object.assign(user, mentor);
+  let profile;
+  if (user.dataValues.role === MENTOR || req.body.role === MENTOR) {
+    profile = await Mentor.findOne({ where: { userId: req.user.id } });
+    await profile.update(_.pick(req.body, mentorFields));
+  } else {
+    profile = await Mentee.findOne({ where: { userId: req.user.id } });
+    await profile.update(req.body);
+  }
+
+  if (profile) {
+    Object.assign(
+      user.dataValues,
+      _.omit(profile.dataValues, ["id", "userId"]),
+      {
+        externalReference: profile.dataValues.id,
+      }
+    );
+  } else {
+    return res.status(404).json({
+      isError: true,
+      message: "User not found!",
+    });
   }
 
   const token = user.generateAuthToken();
@@ -430,7 +465,7 @@ const updateUserProfile = async (req, res) => {
 
   return res.status(200).json({
     isError: false,
-    data: _.omit(user, ["password"]),
+    data: _.omit(user.dataValues, ["password"]),
     message: "Update user successfully.",
   });
 };
@@ -451,14 +486,31 @@ const getUserById = async (req, res) => {
     });
   }
 
-  if (user.role === MENTOR) {
-    const mentor = await Mentor.findOne({ where: { userId: req.params.id } });
-    Object.assign(user, mentor);
+  let profile;
+  if (user.dataValues.role === MENTOR) {
+    profile = await Mentor.findOne({ where: { userId: req.params.id } });
+  } else {
+    profile = await Mentee.findOne({ where: { userId: req.params.id } });
+  }
+
+  if (profile) {
+    Object.assign(
+      user.dataValues,
+      _.omit(profile.dataValues, ["id", "userId"]),
+      {
+        externalReference: profile.dataValues.id,
+      }
+    );
+  } else {
+    return res.status(404).json({
+      isError: true,
+      message: "User not found!",
+    });
   }
 
   return res.status(200).json({
     isError: false,
-    data: _.omit(user, ["password"]),
+    data: _.omit(user.dataValues, ["password"]),
     message: `Get user with id ${req.params.id} successfully.`,
   });
 };

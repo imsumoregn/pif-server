@@ -45,7 +45,7 @@ module.exports = {
         type: Sequelize.BOOLEAN,
       },
       isConfirmed: {
-        type: Sequelize.STRING,
+        type: Sequelize.BOOLEAN,
       },
       avatar: {
         type: Sequelize.STRING,

@@ -14,13 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     generateAuthToken() {
       return jwt.sign(
         {
-          ..._.pick(this, [
-            "id",
-            "email",
-            "name",
-            "isConfirmedEmail",
-            "isActive",
-          ]),
+          ..._.pick(this, ["id", "email", "name", "isConfirmed", "isActive"]),
         },
         process.env.JWT_SECRET_KEY
       );
@@ -58,7 +52,7 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: DataTypes.NOW,
       },
       isActive: DataTypes.BOOLEAN,
-      isConfirmed: DataTypes.STRING,
+      isConfirmed: DataTypes.BOOLEAN,
       avatar: DataTypes.STRING,
       createdAt: {
         type: DataTypes.DATE,
