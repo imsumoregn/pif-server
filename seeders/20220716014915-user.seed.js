@@ -7,7 +7,7 @@ const { EMPTY } = require("../modules/shared/shared.constant");
 const { MENTEE, MENTOR } = require("../modules/user/user.constant");
 const { Mentor, Mentee } = require("../models");
 
-const [menteeId, mentorId] = [uuid(), uuid()];
+const [menteeId, mentorId, anotherMentorId, justOneMoreMentorId, lastMentorId] = [uuid(), uuid(), uuid(), uuid(),uuid()];
 
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -25,7 +25,7 @@ module.exports = {
         phone: "0123456789",
         school: "FPT University",
         exp: JSON.stringify({
-          job: "Software Engineer",
+          title: "Software Engineer",
           workspace: "Contemi Vietnam",
         }),
         birthday: new Date(2000, 1, 1),
@@ -49,7 +49,79 @@ module.exports = {
         phone: "0123456789",
         school: "SheCodes University",
         exp: JSON.stringify({
-          job: "Mentor",
+          title: "Mentor",
+          workspace: "SheCodes Vietnam",
+        }),
+        birthday: new Date(1998, 1, 1),
+        role: MENTOR,
+        description:
+          "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.",
+        memberSince: now,
+        isActive: true,
+        isConfirmed: true,
+        avatar:
+          "https://i.pinimg.com/564x/b7/22/14/b722148204f74e8bd80e22a700a61b70.jpg",
+        createdAt: now,
+        updatedAt: now,
+      },
+      {
+        id: anotherMentorId,
+        email: "mentorship.shecodes@gmail.com",
+        password: password,
+        method: EMPTY,
+        name: "SheCodes",
+        phone: "0123456789",
+        school: "SheCodes University",
+        exp: JSON.stringify({
+          title: "Mentor",
+          workspace: "SheCodes Vietnam",
+        }),
+        birthday: new Date(1998, 1, 1),
+        role: MENTOR,
+        description:
+          "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.",
+        memberSince: now,
+        isActive: true,
+        isConfirmed: true,
+        avatar:
+          "https://i.pinimg.com/564x/b7/22/14/b722148204f74e8bd80e22a700a61b70.jpg",
+        createdAt: now,
+        updatedAt: now,
+      },
+      {
+        id: justOneMoreMentorId,
+        email: "mentorship.shecodes@gmail.com",
+        password: password,
+        method: EMPTY,
+        name: "SheCodes",
+        phone: "0123456789",
+        school: "SheCodes University",
+        exp: JSON.stringify({
+          title: "Mentor",
+          workspace: "SheCodes Vietnam",
+        }),
+        birthday: new Date(1998, 1, 1),
+        role: MENTOR,
+        description:
+          "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.",
+        memberSince: now,
+        isActive: true,
+        isConfirmed: true,
+        avatar:
+          "https://i.pinimg.com/564x/b7/22/14/b722148204f74e8bd80e22a700a61b70.jpg",
+        createdAt: now,
+        updatedAt: now,
+      },
+      {
+        id: lastMentorId,
+        email: "mentorship.shecodes@gmail.com",
+        password: password,
+        method: EMPTY,
+        name: "SheCodes",
+        phone: "0123456789",
+        school: "SheCodes University",
+        exp: JSON.stringify({
+          title: "Mentor",
           workspace: "SheCodes Vietnam",
         }),
         birthday: new Date(1998, 1, 1),
@@ -80,6 +152,45 @@ module.exports = {
           {
             id: uuid(),
             userId: mentorId,
+            location: "Vietnam",
+            linkedin: "https://www.linkedin.com/company/shecodesvietnam/",
+            bookingUrl: EMPTY,
+            github: "https://github.com/shecodesvietnam",
+            scopes: ["Software Development"],
+            fields: ["IT"],
+            offers: ["Định hướng nghề nghiệp"],
+            createdAt: now,
+            updatedAt: now,
+          },
+          {
+            id: uuid(),
+            userId: anotherMentorId,
+            location: "Vietnam",
+            linkedin: "https://www.linkedin.com/company/shecodesvietnam/",
+            bookingUrl: EMPTY,
+            github: "https://github.com/shecodesvietnam",
+            scopes: ["Software Development"],
+            fields: ["IT"],
+            offers: ["Định hướng nghề nghiệp"],
+            createdAt: now,
+            updatedAt: now,
+          },
+          {
+            id: uuid(),
+            userId: justOneMoreMentorId,
+            location: "Vietnam",
+            linkedin: "https://www.linkedin.com/company/shecodesvietnam/",
+            bookingUrl: EMPTY,
+            github: "https://github.com/shecodesvietnam",
+            scopes: ["Software Development"],
+            fields: ["IT"],
+            offers: ["Định hướng nghề nghiệp"],
+            createdAt: now,
+            updatedAt: now,
+          },
+          {
+            id: uuid(),
+            userId: lastMentorId,
             location: "Vietnam",
             linkedin: "https://www.linkedin.com/company/shecodesvietnam/",
             bookingUrl: EMPTY,

@@ -1,16 +1,16 @@
 {
   "development": {
-    "username": "mentorship_admin",
-    "password": "mentorship_shecodes",
-    "database": "mentorship_development",
-    "host": "localhost",
+    "username": "postgres",
+    "password": "postgres",
+    "database": "mentorship",
+    "host": "db",
     "dialect": "postgres"
   },
   "production": {
-    "username": "root",
-    "password": null,
+    "username": "postgres",
+    "password": "postgres",
     "database": "mentorship",
-    "host": "localhost",
+    "host": "db",
     "dialect": "postgres"
   }
 }

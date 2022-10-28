@@ -1,5 +1,7 @@
 node_modules/
 
-environments/environment.local.js
-
 logs/development/
+
+pgdata/
+
+.idea/

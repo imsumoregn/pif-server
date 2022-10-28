@@ -1,4 +1,4 @@
-const OfferConstant = {
+const OFFERS = {
   CAREER_ORIENTATION: "career-orientation",
   FIND_JOB: "find-job",
   INTERVIEW: "interview",
@@ -7,4 +7,4 @@ const OfferConstant = {
   OTHERS: "others",
 };
 
-module.exports = { OfferConstant };
+module.exports = {OFFERS};

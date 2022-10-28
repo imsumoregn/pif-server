@@ -561,20 +561,20 @@
                 "tags": [
                     "Mentee"
                 ],
-                "description": "Mentee login",
+                "description": "Mentee logIn",
                 "parameters": [
                     {
                         "name": "Credential",
                         "in": "body",
                         "description": "Email and password of mentee",
                         "schema": {
-                            "$ref": "#/definitions/LoginMenteeDto"
+                            "$ref": "#/definitions/logInMenteeDto"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Login successfully",
+                        "description": "logIn successfully",
                         "schema": {
                             "type": "object",
                             "properties": {
@@ -604,7 +604,7 @@
                 }
             }
         },
-        "/mentees/auth/email-confirmation/{token}": {
+        "/mentees/auth/verify-email/{token}": {
             "get": {
                 "tags": [
                     "Mentee"
@@ -1274,7 +1274,7 @@
                 }
             }
         },
-        "LoginMenteeDto": {
+        "logInMenteeDto": {
             "required": [
                 "email",
                 "password"

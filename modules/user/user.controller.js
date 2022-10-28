@@ -1,46 +1,46 @@
 const express = require("express");
 const router = express.Router();
 const multer = require("multer");
-const upload = multer({ storage: multer.memoryStorage() });
+const upload = multer({storage: multer.memoryStorage()});
 
 const {
-  uploadAvatar,
-  registerUser,
-  getUserProfile,
-  login,
-  authTokenRefresh,
-  userEmailConfirmation,
-  userRequestPasswordReset,
-  userVerifyPasswordResetToken,
-  userResetPassword,
-  updateUserProfile,
-  getUserById,
+    uploadAvatar,
+    register,
+    getUserProfile,
+    logIn,
+    clientRefreshAccessToken,
+    userVerifyEmail,
+    userRequestResetPassword,
+    userVerifyRequestResetPassword,
+    userChangePassword,
+    userUpdateProfile,
+    getUserById,
 } = require("./user.service");
 const authorization = require("../../middlewares/authorization.middleware");
 
-router.post("/register", registerUser);
+router.post("/register", register);
 
-router.get("/me", [authorization], getUserProfile);
+router.get("/me", authorization, getUserProfile);
 
 router.put(
-  "/me/avatar",
-  [authorization, upload.single("avatar")],
-  uploadAvatar
+    "/me/avatar",
+    [authorization, upload.single("avatar")],
+    uploadAvatar
 );
 
-router.post("/auth", login);
+router.post("/auth", logIn);
 
-router.post("/auth/token-refresh", authTokenRefresh);
+router.get("/auth/refresh-token", clientRefreshAccessToken);
 
-router.get("/auth/email-confirmation/:token", userEmailConfirmation);
+router.get("/auth/verify-email/:token", userVerifyEmail);
 
-router.post("/auth/password-reset-request", userRequestPasswordReset);
+router.post("/auth/reset-password", userRequestResetPassword);
 
-router.get("/auth/password-reset/:token", userVerifyPasswordResetToken);
+router.get("/auth/reset-password/:token", userVerifyRequestResetPassword);
 
-router.post("/auth/password-change", [authorization], userResetPassword);
+router.post("/auth/change-password", authorization, userChangePassword);
 
-router.patch("/me", [authorization], updateUserProfile);
+router.patch("/me", authorization, userUpdateProfile);
 
 router.get("/:id", getUserById);
 

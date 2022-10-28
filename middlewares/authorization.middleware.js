@@ -1,46 +1,53 @@
 const jwt = require("jsonwebtoken");
-const { Token } = require("../models");
-const {
-  TOKEN_ACTIVE,
-  TOKEN_EXPRIRED,
-} = require("../modules/user/user.constant");
+const {User} = require("../models");
 
+/**
+ * Middleware to validate token attached to request.
+ *
+ * We are obliged to query the database, since `id` is also a validating criterion,
+ * so the result is cached in `req.context.user` to avoid querying the database again.
+ */
 const authorization = async (req, res, next) => {
-  const token = req.header("Authorization");
-  if (!token) {
-    return res
-      .status(401)
-      .json({ isError: true, message: "Access denied. No token provided!" });
-  }
 
-  const storedToken = await Token.findOne({
-    where: { value: token },
-  });
-  const now = new Date();
+    const token = req.header("authorization")?.replace("Bearer ", "");
 
-  if (!storedToken) {
-    return res.status(400).json({ isError: true, message: "Invalid token!" });
-  } else if (
-    storedToken.status === TOKEN_EXPRIRED ||
-    storedToken.expriredDate.getTime() < now.getTime()
-  ) {
-    if (
-      storedToken.expriredDate.getTime() < now.getTime() &&
-      storedToken.status === TOKEN_ACTIVE
-    ) {
-      await storedToken.update({ status: TOKEN_EXPRIRED });
+    if (!token) {
+
+        const error = new Error('Unauthorised.');
+        error.status = 401;
+        throw error;
+
     }
 
-    return res.status(401).json({ isError: true, message: "Token exprired!" });
-  }
+    let decoded;
 
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-    req.user = decoded;
-    next();
-  } catch (e) {
-    return res.status(400).json({ isError: true, message: "Invalid token!" });
-  }
+    try {
+
+        decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    } catch (jwtError) {
+
+        jwtError.status = 401;
+        throw jwtError;
+
+    }
+
+    const user = await User.findByPk(decoded.id);
+
+    if (!user) {
+
+        const error = new Error('Unauthorised.');
+        error.status = 401;
+        throw error;
+
+    }
+
+    req.context = {};
+    req.context.user = user;
+    req.context.aud = decoded.aud;
+
+    return next();
+
 };
 
 module.exports = authorization;

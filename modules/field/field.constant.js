@@ -1,4 +1,4 @@
-const FieldType = {
+const FIELDS = {
   DESIGN: "design",
   MARKETING: "marketing",
   PRODUCT: "product",
@@ -9,4 +9,4 @@ const FieldType = {
   OTHERS: "others",
 };
 
-module.exports = { FieldType };
+module.exports = { FIELDS };

@@ -15,27 +15,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   Token.init(
     {
-      id: {
-        type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4,
-        primaryKey: true,
-      },
-      value: DataTypes.STRING,
-      type: DataTypes.STRING,
-      expiredDate: DataTypes.DATE,
-      status: {
-        type: DataTypes.STRING,
-        defaultValue: TOKEN_ACTIVE,
-      },
-      createdAt: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW,
-      },
-      updatedAt: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW,
-        onUpdate: "SET DEFAULT",
-      },
+      value: DataTypes.TEXT,
     },
     {
       sequelize,
