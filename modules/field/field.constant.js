@@ -6,7 +6,6 @@ const FIELDS = {
   DATA_SCIENCE: "data-science",
   FINANCE: "finance",
   HR: "hr",
-  OTHERS: "others",
 };
 
 module.exports = { FIELDS };

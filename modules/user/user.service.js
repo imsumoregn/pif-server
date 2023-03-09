@@ -8,11 +8,11 @@ const {bucket} = require("../../setup/firebase");
 
 const {User, Mentor, Mentee} = require("../../models/index");
 const {
-    validateCreateUser,
     validateLogIn,
-    validateCreateMentor,
     validateUpdateMentor,
-    validateUpdateUser, validateChangePassword,
+    validateUpdateUser,
+    validateChangePassword,
+    validateRegisterUser,
 } = require("../../helpers/validator.helper");
 const {
     sendConfirmRegisteringEmailMail,
@@ -29,10 +29,7 @@ const {
 const {formatToken} = require("../../helpers/token.helper");
 
 const MENTOR_FIELDS = [
-    "location",
-    "linkedin",
     "bookingUrl",
-    "github",
     "scopes",
     "fields",
     "offers",
@@ -46,10 +43,7 @@ const MENTOR_FIELDS = [
  */
 const register = async (req, res) => {
 
-    const {error: joiError} =
-        req.body.role === MENTOR
-            ? validateCreateMentor(req.body)
-            : validateCreateUser(req.body);
+    const {error: joiError} = validateRegisterUser(req.body)
 
     if (joiError) {
 
@@ -74,7 +68,7 @@ const register = async (req, res) => {
 
     if (req.body.role === MENTOR) {
 
-        const userData = Object.assign(_.omit(req.body, MENTOR_FIELDS), {method: 'basic'});
+        const userData = Object.assign(_.omit(req.body, MENTOR_FIELDS), {registeringMethod: 'basic'});
         newUser = await User.create(userData);
         await Mentor.create({
             ..._.pick(req.body, MENTOR_FIELDS),
@@ -84,7 +78,7 @@ const register = async (req, res) => {
 
     } else {
 
-        const userData = Object.assign(req.body, {method: "basic"});
+        const userData = Object.assign(req.body, {registeringMethod: "basic"});
         newUser = await User.create(userData);
         await Mentee.create({userId: newUser.id});
         userDataToResponse = _.omit(newUser.dataValues, ["password"]);
@@ -100,7 +94,6 @@ const register = async (req, res) => {
         // TODO: Handle mail sending error with automatic retry mechanism.
 
     }
-
 
     return res.status(200).json({
         isError: false,
@@ -180,7 +173,7 @@ const uploadAvatar = async (req, res) => {
     blobWriter.on("finish", async () => {
 
         await req.context.user.update({
-            avatar: `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${imageStorageName}?alt=media&token=${token}`,
+            avatarUrl: `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${imageStorageName}?alt=media&token=${token}`,
         });
 
         res.status(200).json({
@@ -334,7 +327,7 @@ const userVerifyEmail = async (req, res) => {
 
     }
 
-    if (user.isConfirmed) {
+    if (user.hasConfirmedEmail) {
 
         const error = new Error('Your account has already been confirmed!');
         error.status = 400;
@@ -342,7 +335,7 @@ const userVerifyEmail = async (req, res) => {
 
     }
 
-    await user.update({isConfirmed: true});
+    await user.update({hasConfirmedEmail: true});
 
     return res.status(200).json({
         isError: false,
@@ -358,7 +351,7 @@ const userVerifyEmail = async (req, res) => {
  * @endpoint `/auth/reset-password`
  * @access PUBLIC
  */
-const userRequestResetPassword = async (req, res) => {
+const userRequestPasswordReset = async (req, res) => {
 
     const {error: joiError} = Joi.object({
         email: Joi.string().email().required(),
@@ -407,7 +400,7 @@ const userRequestResetPassword = async (req, res) => {
  * @endpoint `/auth/reset-password/:token`
  * @access PUBLIC
  */
-const userVerifyRequestResetPassword = async (req, res) => {
+const userVerifyPasswordResetRequest = async (req, res) => {
 
     let decodedToken;
 
@@ -439,9 +432,14 @@ const userVerifyRequestResetPassword = async (req, res) => {
     res.header("Authorization", accessToken);
     res.header("Refresh-Token", refreshToken);
 
-    return res.redirect(
-        `${environment.client}/user/change-password`,
-    );
+    // return res.redirect(
+    //     `${environment.client}/user/change-password`,
+    // );
+
+    return res.status(200).json({
+        isError: false,
+        message: "Reset password token valid.",
+    });
 
 };
 
@@ -572,6 +570,7 @@ const getUserById = async (req, res) => {
     }
 
     const user = await User.findByPk(req.params.id);
+    console.log(req.params.id)
 
     if (!user) {
 
@@ -625,25 +624,25 @@ const logInWithGoogle = async (
 
         if (user) {
 
-            if (user.id !== profile.id) {
+            // if (user.id !== profile.id) {
 
-                return done(new Error("Email has already been used!"), user);
+            //     return done(new Error("Email has already been used!"), user);
 
-            }
+            // }
 
             return done(null, user);
 
         } else {
 
             const created = await User.create({
-                id: profile.id,
+                id: uuid(),
                 email: profile.emails[0].value,
                 name: profile.displayName,
-                isConfirmed: true,
-                method: "google",
+                hasConfirmedEmail: true,
+                registeringMethod: "google",
                 isActive: true,
                 password: profile.id,
-                avatar: profile.photos.length ? profile.photos[0].value : null,
+                avatarUrl: profile.photos.length ? profile.photos[0].value : null,
             });
 
             return done(null, created);
@@ -665,10 +664,11 @@ module.exports = {
     logIn,
     clientRefreshAccessToken,
     userVerifyEmail,
-    userRequestResetPassword,
-    userVerifyRequestResetPassword,
+    userRequestPasswordReset,
+    userVerifyPasswordResetRequest,
     userChangePassword,
     userUpdateProfile,
     getUserById,
     logInWithGoogle,
+    MENTOR_FIELDS
 };

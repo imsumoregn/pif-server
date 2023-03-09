@@ -1,10 +1,8 @@
 const OFFERS = {
   CAREER_ORIENTATION: "career-orientation",
-  FIND_JOB: "find-job",
-  INTERVIEW: "interview",
-  REVIEW_RESUME: "review-resume",
-  LEARNING_PATH: "learning-path",
-  OTHERS: "others",
+  JOB_FINDING: "find-job",
+  INTERVIEW_PREP: "interview",
+  RESUME_REVIEW: "review-resume",
 };
 
 module.exports = {OFFERS};

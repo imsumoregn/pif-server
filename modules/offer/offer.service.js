@@ -1,8 +1,8 @@
-const {Offer} = require("../../models/index");
+const { OFFERS } = require("./offer.constant");
 
-const getAllOffers = async (req, res) => {
+const getAllOffers = async (_, res) => {
 
-    const offers = await Offer.findAll();
+    const offers = Object.keys(OFFERS)
 
     return res.status(200).json({
         isError: false,

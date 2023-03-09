@@ -9,7 +9,7 @@ const {User} = require("../models");
  */
 const authorization = async (req, res, next) => {
 
-    const token = req.header("authorization")?.replace("Bearer ", "");
+    const token = req.header("Authorization")?.replace("Bearer ", "");
 
     if (!token) {
 
@@ -32,6 +32,8 @@ const authorization = async (req, res, next) => {
 
     }
 
+  console.log(decoded.id)
+
     const user = await User.findByPk(decoded.id);
 
     if (!user) {
@@ -45,6 +47,8 @@ const authorization = async (req, res, next) => {
     req.context = {};
     req.context.user = user;
     req.context.aud = decoded.aud;
+
+    console.log(user.dataValues)
 
     return next();
 

@@ -10,8 +10,8 @@ const {
     logIn,
     clientRefreshAccessToken,
     userVerifyEmail,
-    userRequestResetPassword,
-    userVerifyRequestResetPassword,
+    userRequestPasswordReset,
+    userVerifyPasswordResetRequest,
     userChangePassword,
     userUpdateProfile,
     getUserById,
@@ -34,9 +34,9 @@ router.get("/auth/refresh-token", clientRefreshAccessToken);
 
 router.get("/auth/verify-email/:token", userVerifyEmail);
 
-router.post("/auth/reset-password", userRequestResetPassword);
+router.post("/auth/reset-password", userRequestPasswordReset);
 
-router.get("/auth/reset-password/:token", userVerifyRequestResetPassword);
+router.get("/auth/reset-password/:token", userVerifyPasswordResetRequest);
 
 router.post("/auth/change-password", authorization, userChangePassword);
 

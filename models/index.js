@@ -12,15 +12,17 @@ const logger = require("../setup/logger");
 const db = {};
 let sequelize
 
-sequelize = new Sequelize(
-    config.database,
-    config.username,
-    config.password,
-    {
-        host: config.host,
-        dialect: config.dialect,
-    }
-);
+// sequelize = new Sequelize(
+//     config.database,
+//     config.username,
+//     config.password,
+//     {
+//         host: config.host,
+//         dialect: config.dialect,
+//     }
+// );
+
+sequelize = new Sequelize('postgresql://postgres:xWGS1GQJfgwgi214NAXu@containers-us-west-150.railway.app:6076/railway')
 (async () => {
     try {
 

@@ -1,6 +1,6 @@
 const Joi = require("joi");
 
-const validateCreateUser = (user) => {
+const validateRegisterUser = (user) => {
     const schema = Joi.object({
         email: Joi.string().email().required(),
         password: Joi.string().min(6).required(),
@@ -10,28 +10,6 @@ const validateCreateUser = (user) => {
         // phone: Joi.string(),
         // birthday: Joi.date().raw(),
         // exp: Joi.array().items(Joi.object()),
-    });
-
-    return schema.validate(user);
-};
-
-const validateCreateMentor = (user) => {
-    const schema = Joi.object({
-        email: Joi.string().email().required(),
-        password: Joi.string().min(6).required(),
-        role: Joi.string().required(),
-        // method: Joi.string(),
-        // description: Joi.string(),
-        // phone: Joi.string(),
-        // birthday: Joi.date().raw(),
-        // exp: Joi.array().items(Joi.object()),
-        // location: Joi.string(),
-        // scopes: Joi.array().items(Joi.string()),
-        // fields: Joi.array().items(Joi.string()),
-        // offers: Joi.array().items(Joi.string()),
-        // linkedin: Joi.string(),
-        // github: Joi.string(),
-        // bookingUrl: Joi.string(),
     });
 
     return schema.validate(user);
@@ -49,12 +27,13 @@ const validateLogIn = (user) => {
 const validateUpdateMentor = (user) => {
     const schema = Joi.object({
         name: Joi.string(),
+        gender: Joi.string(),
         description: Joi.string(),
-        phone: Joi.string(),
-        birthday: Joi.date().raw(),
-        exp: Joi.array().items(Joi.object()),
+        title: Joi.string(),
+        workplace: Joi.string(),
+        schoolName: Joi.string(),
+        major: Joi.string(),
         location: Joi.string(),
-        scopes: Joi.array().items(Joi.string()),
         fields: Joi.array().items(Joi.string()),
         offers: Joi.array().items(Joi.string()),
         linkedin: Joi.string(),
@@ -67,11 +46,16 @@ const validateUpdateMentor = (user) => {
 
 const validateUpdateUser = (user) => {
     const schema = Joi.object({
-        name: Joi.string().required(),
+        name: Joi.string(),
+        gender: Joi.string(),
+        schoolName: Joi.string(),
+        major: Joi.string(),
+        title: Joi.string(),
+        workplace: Joi.string(),
+        location: Joi.string(),
         description: Joi.string(),
-        phone: Joi.string(),
-        birthday: Joi.date().raw(),
-        exp: Joi.array().items(Joi.object()),
+        linkedin: Joi.string(),
+        github: Joi.string(),
     });
 
     return schema.validate(user);
@@ -99,9 +83,8 @@ const validateReview = (requestBody) => {
 }
 
 module.exports = {
-    validateCreateUser,
+    validateRegisterUser,
     validateLogIn,
-    validateCreateMentor,
     validateUpdateMentor,
     validateUpdateUser,
     validateChangePassword,

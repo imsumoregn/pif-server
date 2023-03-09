@@ -66,7 +66,7 @@ const sendConfirmPasswordResetMail = async (account) => {
     try {
 
         html = await readFile(
-            `${__dirname}/templates/email-reset-password.template.html`,
+            `${__dirname}/../templates/email-reset-password.template.html`,
             {encoding: "utf-8"},
         );
 
@@ -81,7 +81,7 @@ const sendConfirmPasswordResetMail = async (account) => {
     const token = account.generateAuthToken(RESET_PASSWORD_TOKEN);
     const replacements = {
         username: account.name,
-        confirmUrl: `${environment.client}/user/reset-password?token=${token}`,
+        confirmUrl: `${environment.client}/user/forgot-password?token=${token}`,
     };
 
     const htmlToSend = template(replacements);
@@ -95,6 +95,7 @@ const sendConfirmPasswordResetMail = async (account) => {
 
     try {
 
+        console.log('Sending email...');
         const responseMailService = await sgMail.send(options);
         logger.info(responseMailService);
 

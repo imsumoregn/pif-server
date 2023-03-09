@@ -8,8 +8,8 @@ const REFRESH_TOKEN = "refresh-token";
 const CONFIRM_EMAIL_TOKEN = "confirm-registration";
 const RESET_PASSWORD_TOKEN = "reset-password";
 
-const MENTEE = "mentee";
-const MENTOR = "mentor";
+const MENTEE = "Mentee";
+const MENTOR = "Mentor";
 
 module.exports = {
     USER_URL,

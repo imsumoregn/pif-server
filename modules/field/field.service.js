@@ -1,8 +1,8 @@
-const {Field} = require("../../models/index");
+const { FIELDS } = require("./field.constant");
 
-const getAllFields = async (req, res) => {
+const getAllFields = async (_, res) => {
 
-    const fields = await Field.findAll();
+    const fields = Object.keys(FIELDS)
 
     return res.status(200).json({
         isError: false,
